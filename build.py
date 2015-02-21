@@ -16,19 +16,17 @@ def main(jobs_dir):
         deploy_dir = os.path.join(hyde_root, 'deploy')
         jobs_meta_path = os.path.join(jobs_dest, 'meta.yaml')
 
-    with Log("Copy in jobs"):
-        with Log("Reading jobs yaml"):
-            with open(jobs_meta_path, 'rb') as fh:
-                yaml_file = fh.read()
-        with Log("Removing old dir"):
-            shutil.rmtree(jobs_dest)
-        with Log("Copying in jobs files"):
-            shutil.copytree(jobs_source, jobs_dest)
-        with Log("Replacing meta.yaml"):
-            with open(jobs_meta_path, 'wb') as fh:
-                fh.write(yaml_file)
+    with Log("Copy in jobs") as l:
+        for file in os.listdir(jobs_source):
+            if not file.endswith(".html"):
+                l.output("Skipping: %s" % file)
+                continue
+            with Log('Copying %s' % file):
+                src_path = '%s/%s' % (jobs_source, file) # This is safer than join()
+                dest_path = '%s/%s' % (jobs_dest, file)
+                shutil.copyfile(src_path, dest_path)
     with Log("Building Site"):
-        subprocess.check_call(['hyde', '-s', hyde_root, 'gen'])
+        subprocess.check_call(['hyde', '-s', hyde_root, 'gen', '-r'])
 
 
 if __name__ == "__main__":
