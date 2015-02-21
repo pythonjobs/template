@@ -1,0 +1,39 @@
+#!/usr/bin/env python2.7
+import sys
+import shutil
+import os
+import subprocess
+import tempfile
+from fin.contextlog import Log
+
+def main(dest):
+    with Log("Identifying paths") as l:
+        commit = os.environ.get("TRAVIS_COMMIT", "manual")
+        dest = os.path.abspath(dest)
+        temp_dir = tempfile.mkdtemp()
+        l.output("Temp dir: %s" % temp_dir)
+        working_dir = os.path.join(temp_dir, 'build')
+        template_dir = os.path.abspath(os.path.dirname(__file__))
+        hyde_root = os.path.join(template_dir, 'hyde')
+        build_dir = os.path.join(hyde_root, 'deploy')
+
+    with Log("Checking out gh-pages"):
+        subprocess.check_call(['git', 'checkout', 'gh-pages'], cwd=dest)
+
+    with Log("Setting up working dir"):
+        with Log("Copy in built site"):
+            shutil.copytree(build_dir, working_dir)
+        with Log("Move in .git"):
+            os.rename(os.path.join(dest, '.git'),
+                      os.path.join(working_dir, '.git'))
+    with Log("Committing"):
+        subprocess.check_call(['git', 'add', '-A'], cwd=working_dir) 
+        subprocess.check_call(['git', 'commit', '-a', 
+                               '-m', 'Site deploy for %s' % commit], 
+                               cwd=working_dir)
+        subprocess.check_call(['git', 'push', 'origin', 'gh-pages'], cwd=working_dir)
+
+
+if __name__ == "__main__":
+    # using sys.argv like this is ugly
+    sys.exit(main(*sys.argv[1:]))

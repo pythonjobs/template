@@ -3,11 +3,11 @@ import sys
 import shutil
 import os
 import subprocess
-from fin.contextlog import CLog
+from fin.contextlog import Log
 
 
 def main(jobs_dir):
-    with CLog("Identifying paths"):
+    with Log("Identifying paths"):
         jobs_root = os.path.abspath(jobs_dir)
         template_dir = os.path.abspath(os.path.dirname(__file__))
         hyde_root = os.path.join(template_dir, 'hyde')
@@ -16,18 +16,18 @@ def main(jobs_dir):
         deploy_dir = os.path.join(hyde_root, 'deploy')
         jobs_meta_path = os.path.join(jobs_dest, 'meta.yaml')
 
-    with CLog("Copy in jobs"):
-        with CLog("Reading jobs yaml"):
+    with Log("Copy in jobs"):
+        with Log("Reading jobs yaml"):
             with open(jobs_meta_path, 'rb') as fh:
                 yaml_file = fh.read()
-        with CLog("Removing old dir"):
+        with Log("Removing old dir"):
             shutil.rmtree(jobs_dest)
-        with CLog("Copying in jobs files"):
+        with Log("Copying in jobs files"):
             shutil.copytree(jobs_source, jobs_dest)
-        with CLog("Replacing meta.yaml"):
+        with Log("Replacing meta.yaml"):
             with open(jobs_meta_path, 'wb') as fh:
                 fh.write(yaml_file)
-    with CLog("Building Site"):
+    with Log("Building Site"):
         subprocess.check_call(['hyde', '-s', hyde_root, 'gen'])
 
 
