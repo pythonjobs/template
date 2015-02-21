@@ -12,7 +12,7 @@ def main(jobs_dir):
         jobs_dest = os.path.join(hyde_root, 'content', 'jobs')
         deploy_dir = os.path.join(hyde_root, 'deploy')
 
-    with CLog("Copy in jobs")
+    with CLog("Copy in jobs"):
         with CLog("Reading jobs yaml"):
             with open(os.path.join(jobs_dest, 'meta.yaml', 'rb') as fh:
                 yaml_file = fh.read()
@@ -22,7 +22,7 @@ def main(jobs_dir):
         shutil.copytree(jobs_source, jobs_dest)
     with CLog("Building Site"):
         subprocess.check_call(['hyde', '-s', hyde_root, 'gen'])
-   
+
 
 if __name__ == "__main__":
     # using sys.argv like this is ugly
