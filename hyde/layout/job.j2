@@ -41,9 +41,10 @@ Tags:
 {% endfor %}
 </ul>
 {% endif %}
+
 {% filter markdown|typogrify -%}
-{% mark post -%}
-{% block post -%}{%- endblock %}
+{% mark detail -%}
+{% block detail -%}{%- endblock %}
 {%- endmark %}
 {%- endfilter %}
 </article>

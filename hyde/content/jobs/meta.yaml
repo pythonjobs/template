@@ -1,5 +1,6 @@
 listable: true
 extends: job.j2
+default_block: detail
 tags:
   - uk
   - python

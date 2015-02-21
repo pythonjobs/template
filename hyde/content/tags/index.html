@@ -1,0 +1,9 @@
+---
+extends: false
+listable: false
+
+---
+
+{% for name, path in site.tagger.tags %}
+<div>{{name}}</div>
+{% endfor %}

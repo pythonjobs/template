@@ -15,6 +15,21 @@ footer,header,hgroup,menu,nav,section {
     display:block;
 }
 
+b, strong{
+  font-weight: bold;
+}
+
+h1{
+  font-size: 120%;
+  font-weight: bold;
+}
+
+.job_item{
+  margin: 10px;
+  border: 1px solid #eee;
+  padding: 5px;
+}
+
 table {
     border-collapse: collapse;
 }

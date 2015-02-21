@@ -7,14 +7,12 @@ description: Free Jobs
 
 {% from "macros.j2" import render_excerpt with context %}
 <section class="blog_excerpt">
-{% set latest = site.content.walk_resources_sorted_by_time()|first %}
-
-{% if latest -%}
-{{ render_excerpt(latest, 'post') }}
-
-<a class="button white medium"
-    href="{{ content_url(latest.url) }}">Read more&hellip;</a>
-
-{%- endif %}
+{% for job in  site.content.walk_resources_sorted_by_time() %}
+<div class="job_item">
+	{{ render_excerpt(job, 'post') }}
+	<a class="button white medium"
+    	href="{{ content_url(job.url) }}">Read more&hellip;</a>
+</div>
+{% endfor %}
 
 </section>
