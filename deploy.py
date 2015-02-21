@@ -27,11 +27,17 @@ def main(dest):
             os.rename(os.path.join(dest, '.git'),
                       os.path.join(working_dir, '.git'))
     with Log("Committing"):
-        subprocess.check_call(['git', 'add', '-A'], cwd=working_dir) 
-        subprocess.check_call(['git', 'commit', '-a', 
-                               '-m', 'Site deploy for %s' % commit], 
-                               cwd=working_dir)
-        subprocess.check_call(['git', 'push', 'origin', 'gh-pages'], cwd=working_dir)
+        with Log("Adding any new files"):
+            subprocess.check_call(['git', 'add', '-A'], cwd=working_dir) 
+        with Log("Setting up git variables"):
+            subprocess.check_call(['git', 'config', 'user.email', 'stestagg@gmail.com'], cwd=working_dir) 
+            subprocess.check_call(['git', 'config', 'user.name', 'Travis Job'], cwd=working_dir) 
+        with Log("Committing"):
+            subprocess.check_call(['git', 'commit', '-a', 
+                                   '-m', 'Site deploy for %s' % commit], 
+                                   cwd=working_dir)
+        with Log("Pushing"):
+            subprocess.check_call(['git', 'push', 'origin', 'gh-pages'], cwd=working_dir)
 
 
 if __name__ == "__main__":
