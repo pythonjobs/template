@@ -19,6 +19,10 @@ b, strong{
   font-weight: bold;
 }
 
+i, em{
+  font-style: italic;
+}
+
 h1{
   font-size: 120%;
   font-weight: bold;
@@ -92,6 +96,7 @@ footer{
   position: relative;
   margin:0;
   padding:0;
+  font-size: 11px;
   height: 1.2em;
   margin-top: -1.2em;
   line-height: 1.2em;
@@ -135,4 +140,30 @@ ul.tags .tag{
 }
 ul.tags .tag:hover{
     background: #7e98cb;
-};
+}
+
+.job h1.title{
+  font-size: 130%;
+  margin-bottom: 10px;
+}
+
+.job h1,
+.job h2{
+  margin-top: 10px;
+}
+
+.job h2{
+  font-weight: bold;
+}
+.job .company{
+  font-style: italic;
+}
+
+.job .body ul,
+.job .body ol{
+  margin-left: 2em;
+}
+
+.job .head time{
+  margin-left: 10px;
+}

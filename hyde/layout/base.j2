@@ -7,7 +7,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
   {% block starthead %}{% endblock starthead %}
-  <meta charset="{{ resource.meta.charset }}">
+  <meta charset="utf-8"> 
 
   <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
        Remove this if you use the .htaccess -->
@@ -30,12 +30,10 @@
   <!--  Mobile viewport optimized: j.mp/bplateviewport -->
   <meta name="viewport" content="{{ resource.meta.viewport }}">
 
-  {% block favicons %}
   <!-- Place favicon.ico & apple-touch-icon.png
         in the root of your domain and delete these references -->
-  <link rel="shortcut icon" href="{{ media_url('/favicon.ico') }}">
-  <link rel="apple-touch-icon" href="{{ media_url('/apple-touch-icon.png') }}">
-  {% endblock favicons %}
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
   {% block css %}
   <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -55,7 +53,7 @@
       {% block container %}
       <div id="main" role="main">
           <header class="banner clearfix">
-          <img src='{{ media_url('images/logo.png') }}' id="logo"/>
+          <a href="/"><img src='{{ media_url('images/logo.png') }}' id="logo"/></a>
           {% block header -%}
             <h1></h1>
             <h3></h3>
@@ -73,7 +71,7 @@
     {% endblock container %}
   </div> <!--! end of #container -->
   <footer>
-      Powered by <a href="http://ringce.com/hyde">hyde</a>.
+      Pythonjobs - <a href="http://hyde.github.io/">hyde</a>.
   </footer>
   {% endblock content%}
   {% block js %}

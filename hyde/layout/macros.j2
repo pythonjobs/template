@@ -4,7 +4,7 @@
     <h3><a href="{{ content_url(res.url) }}">{{ res.meta.title }}</a></h3>
     {{ post.excerpt|markdown|typogrify }}
     <time datetime="{{ res.meta.created.strftime('%Y-%m-%d') }}">
-        Posted: {{ res.meta.created.strftime('%a, %d %b %Y') }}
+        <em>{{ res.meta.company }}</em> {{ res.meta.created.strftime('%a, %d %b %Y') }}
     </time>
     </article>
 {% endmacro %}
@@ -18,9 +18,14 @@
         {% if item.type == 'page' -%}
             {% set active = (resource.url ==
                 site.content.resource_from_relative_path(item.url).url) -%}
-        {% else -%}
+            {% set url = content_url(item.url) %}
+        {% elif item.type == 'node' -%}
             {% set active = (node ==
                 site.content.node_from_relative_path(item.url)) -%}
+            {% set url = content_url(item.url) %}
+        {% else -%}
+            {% set active = False %}
+            {% set url = item.url %}
         {%- endif %}
         {% set classes = ['button', 'white'] -%}
         {% do classes.append('active') if active -%}
@@ -28,7 +33,7 @@
         <li>
             <a title="{{ item.description }}"
                 class="{{ classes|join(' ') }}"
-                href="{{ content_url(item.url) }}">
+                href="{{ url }}">
                 {{ item.name }}
             </a>
         </li>

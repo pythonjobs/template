@@ -1,52 +1,58 @@
 {% extends "base.j2" %}
 
 {% block main -%}
-<article class="post">
 <nav class="post_nav">
-<a class="backlink" href="{{ content_url(resource.node.url) }}">Back to list</a>
-<a class="prev{{' disabled' if not resource.prev_by_time }}"
+<a class="backlink" href="{{ content_url(resource.node.parent.url) }}">Back to list</a>
+{% if resource.prev_by_time %}
+| <a class="prev"
     title="{{ resource.prev_by_time.meta.title }}"
-    {% if resource.prev_by_time %}
-    href="{{ content_url(resource.prev_by_time.url) }}"{% endif %}>
-    Previous
+    href="{{ content_url(resource.prev_by_time.url) }}">
+    Previous Job
 </a>
+{% endif %}
 
-<a class="next{{' disabled' if not resource.next_by_time }}"
+{% if resource.next_by_time %}
+| <a class="next{{' disabled'  }}"
     title="{{ resource.next_by_time.meta.title }}"
-    {% if resource.next_by_time %}
-    href="{{ content_url(resource.next_by_time.url) }}"{% endif %}>
-    Next
+    href="{{ content_url(resource.next_by_time.url) }}">
+    Next Job
 </a>
+{% endif %}
 
 <br>
 </nav>
-<h1 class="title">
-        {{ resource.meta.title }}
-</h1>
-<div>
-    <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
-        Posted: {{ resource.meta.created.strftime('%a, %d %b %Y') }}
-    </time>
-</div>
+<article class="job">
+    <h1 class="title">
+            {{ resource.meta.title }}
+    </h1>
+    <div class="head">
+        <span class="company">
+            {{ resource.meta.company }}
+        </span>
+        <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
+            Posted: {{ resource.meta.created.strftime('%a, %d %b %Y') }}
+        </time>
+    </div>
 
-{% if resource.meta.tags %}
-Tags:
-<ul class="tags clear">
-{% for tag in resource.meta.tags %}
-<li>
-    <a class="tag" href="{{ content_url('tags/'~tag~'.html') }}">
-        {{ tag }}
-    </a>
-</li>
-{% endfor %}
-</ul>
-{% endif %}
-
-{% filter markdown|typogrify -%}
-{% mark detail -%}
-{% block detail -%}{%- endblock %}
-{%- endmark %}
-{%- endfilter %}
+    {% if resource.meta.tags %}
+    Tags:
+    <ul class="tags clear">
+    {% for tag in resource.meta.tags %}
+    <li>
+        <a class="tag" href="{{ content_url('tags/'~tag~'.html') }}">
+            {{ tag }}
+        </a>
+    </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    <div class="body">
+        {% filter markdown|typogrify -%}
+        {% mark detail -%}
+        {% block detail -%}{%- endblock %}
+        {%- endmark %}
+        {%- endfilter %}
+    </div>
 </article>
 
 {%- endblock %}

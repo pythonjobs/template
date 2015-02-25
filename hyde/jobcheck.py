@@ -7,6 +7,8 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 
 	REQUIRED_META = {
 		'title': re.compile('.{5,}'),
+		'company': re.compile('.{3,}'),
+		'email': re.compile('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$', re.I),
 		'created': lambda x: isinstance(x, (datetime.date, datetime.datetime))
 	}
 
@@ -27,5 +29,5 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 							if not key in meta:
 								raise RuntimeError("Job %s must specify '%s' in frontmatter" % (resource.name, key))
 							if not check.match(meta[key]):
-								raise RuntimeError("Job %s has invalid '%s' in frontmatter" % (resource.name, key))
+								raise RuntimeError("Job %s has invalid '%s' in frontmatter: '%s'" % (resource.name, key, meta[key]))
 

@@ -29,8 +29,8 @@ context:
                 name: About
                 description: About
                 css_class: about
-                type: page
-                url: about.html
+                type: link
+                url: https://github.com/pythonjobs/jobs
 meta:
     nodemeta: meta.yaml
 sorter:

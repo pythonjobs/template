@@ -4,7 +4,7 @@ default_block: main
 title: The Pythonjobs board
 description: Free Jobs
 ---
-
+<h1>All Jobs</h1>
 {% from "macros.j2" import render_excerpt with context %}
 <section class="blog_excerpt">
 {% for job in  site.content.walk_resources_sorted_by_time() %}
