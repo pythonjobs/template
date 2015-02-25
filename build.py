@@ -26,7 +26,7 @@ def main(jobs_dir):
                 dest_path = '%s/%s' % (jobs_dest, file)
                 shutil.copyfile(src_path, dest_path)
     with Log("Building Site"):
-        subprocess.check_call(['hyde', '-s', hyde_root, 'gen', '-r'])
+        subprocess.check_call(['hyde', '-x', '-s', hyde_root, 'gen', '-r'])
 
 
 if __name__ == "__main__":
