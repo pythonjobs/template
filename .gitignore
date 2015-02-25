@@ -1,2 +1,4 @@
-hyde/deploy/*
+hyde/deploy/
 .hyde_deps
+*.py[cod]
+__pycache__/
