@@ -1,51 +1,79 @@
 {% extends "base.j2" %}
 
 {% block main -%}
-<nav class="post_nav">
-<a class="backlink" href="{{ content_url(resource.node.parent.url) }}">Back to list</a>
-{% if resource.prev_by_time %}
-| <a class="prev"
-    title="{{ resource.prev_by_time.meta.title }}"
-    href="{{ content_url(resource.prev_by_time.url) }}">
-    Previous Job
-</a>
-{% endif %}
+<nav class="main">
+    <a class="backlink" href="{{ content_url(resource.node.parent.url) }}">
+        <i class='i-list'></i>
+        Back to list
+    </a>
+    {% if resource.prev_by_time %}
+    <a class="prev"
+        title="{{ resource.prev_by_time.meta.title }}"
+        href="{{ content_url(resource.prev_by_time.url) }}">
+        <i class='i-left'></i>
+        Previous Job
+    </a>
+    {% endif %}
 
-{% if resource.next_by_time %}
-| <a class="next{{' disabled'  }}"
-    title="{{ resource.next_by_time.meta.title }}"
-    href="{{ content_url(resource.next_by_time.url) }}">
-    Next Job
-</a>
-{% endif %}
-
-<br>
+    {% if resource.next_by_time %}
+    <a class="next"
+        title="{{ resource.next_by_time.meta.title }}"
+        href="{{ content_url(resource.next_by_time.url) }}">
+        Next Job <i class='i-right'></i>
+    </a>
+    {% endif %}
 </nav>
+
 <article class="job">
-    <h1 class="title">
+    <h1>
             {{ resource.meta.title }}
     </h1>
     <div class="head">
-        <span class="company">
-            {{ resource.meta.company }}
+        Posted by 
+        <span>
+            {% if resource.meta.url %}
+            <a href="{{ resource.meta.url }}" target="_blank">
+            {% endif %}
+                <i class="i-company"></i>
+                {{ resource.meta.company }}
+            {% if resource.meta.url %}
+            </a>
+            {% endif %}
         </span>
-        <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
-            Posted: {{ resource.meta.created.strftime('%a, %d %b %Y') }}
-        </time>
+        on
+        <span>
+            <i class="i-calendar"></i>
+            {{ resource.meta.created.strftime('%a, %d %b %Y') }}
+        </span>
+        {% if resource.meta.tags %}
+        <div class="tags">
+            <i class="i-tag"></i> Tags:
+            <ul class="tags clear">
+                {% for tag in resource.meta.tags %}
+                    <li>
+                        <a class="tag" href="{{ content_url('tags/'~tag~'.html') }}">
+                            {{ tag }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 
-    {% if resource.meta.tags %}
-    Tags:
-    <ul class="tags clear">
-    {% for tag in resource.meta.tags %}
-    <li>
-        <a class="tag" href="{{ content_url('tags/'~tag~'.html') }}">
-            {{ tag }}
-        </a>
-    </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
+    <div class="contact">
+    <h1>Contact</h1>
+        <div class="field">
+            Name: <span>{{ resource.meta.contact.name }}</span>
+        </div>
+        <div class="field">
+            Email: <span><a href="mailto:{{ resource.meta.contact.email }}">{{ resource.meta.contact.email }}</a></span>
+        </div>
+        {% if reqsource.meta.url %}
+        {% endif %}
+    </div>
+
+
     <div class="body">
         {% filter markdown|typogrify -%}
         {% mark detail -%}

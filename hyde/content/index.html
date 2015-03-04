@@ -4,15 +4,17 @@ default_block: main
 title: The Pythonjobs board
 description: Free Jobs
 ---
-<h1>All Jobs</h1>
-{% from "macros.j2" import render_excerpt with context %}
-<section class="blog_excerpt">
-{% for job in  site.content.walk_resources_sorted_by_time() %}
-<div class="job_item">
-	{{ render_excerpt(job, 'post') }}
-	<a class="button white medium"
-    	href="{{ content_url(job.url) }}">Read more&hellip;</a>
-</div>
-{% endfor %}
 
+<h1>Most Recent Jobs</h1>
+{% from "macros.j2" import render_excerpt with context %}
+<section class="job_list">
+	{% for job in  site.content.walk_resources_sorted_by_time() %}
+		<div class="job">
+			<a class="go_button"
+		    	href="{{ content_url(job.url) }}">
+		    	Read more <i class="i-right"></i>
+		    </a>
+		    {{ render_excerpt(job, 'post') }}
+		</div>
+	{% endfor %}
 </section>

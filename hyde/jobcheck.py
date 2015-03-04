@@ -5,12 +5,45 @@ from fin.contextlog import Log
 
 class CheckMetaPlugin(hyde.plugin.Plugin):
 
-	REQUIRED_META = {
-		'title': re.compile('.{5,}'),
-		'company': re.compile('.{3,}'),
-		'email': re.compile('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$', re.I),
-		'created': lambda x: isinstance(x, (datetime.date, datetime.datetime))
-	}
+	def _get_testers(self):
+		tester_re = 'test_'
+		for name in dir(self):
+			if not name.startswith('test_'):
+				continue
+			value = getattr(self, name)
+			if callable(value):
+				yield value
+
+	def assertTrue(self, condition, message="Assertion Failed"):
+		if not condition:
+			raise AssertionError(message)
+
+	def test_title(self, resource):
+		""" Jobs must have a title """
+		self.assertTrue(len(resource.meta.title) > 3)
+
+	def test_company(self, resource):
+		""" Jobs must reference a company """
+		self.assertTrue(len(resource.meta.company) > 2)
+
+	def test_email(self, resource):
+		""" Jobs must include a valid email """
+		email = resource.meta.contact.email
+		self.assertTrue(re.match('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$', email, re.I) is not None)
+
+	def test_name(self, resource):
+		""" Jobs must include a contact name"""
+		contact = resource.meta.contact.name
+		self.assertTrue(' ' in contact.strip())
+		self.assertTrue(len(contact) > 3)
+
+	def test_created_date(self, resource):
+		""" Jobs must have a create date before now """
+		date = resource.meta.created
+		self.assertTrue(isinstance(date, datetime.date))
+		self.assertTrue(type(date) is datetime.date, # unfortunately isinstance fails us here
+						'created must be a date, not date time') 
+		self.assertTrue(date < datetime.date.today(), "%s is in the future" % date)
 
 	def begin_site(self):
 		jobs = self.site.content.node_from_relative_path('jobs/')
@@ -21,13 +54,7 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 					continue
 				with Log(resource.name):
 					meta = resource.meta.to_dict()
-					for key, check in self.REQUIRED_META.iteritems():
-						if callable(check):
-							if not check(meta.get(key)):
-								raise RuntimeError("Job %s frontmatter '%s' has not been accepted" % (resource.name, key))	
-						else:
-							if not key in meta:
-								raise RuntimeError("Job %s must specify '%s' in frontmatter" % (resource.name, key))
-							if not check.match(meta[key]):
-								raise RuntimeError("Job %s has invalid '%s' in frontmatter: '%s'" % (resource.name, key, meta[key]))
-
+					for tester in self._get_testers():
+						assert tester.__doc__ is not None
+						with Log("Test %s" % (tester.__doc__)):
+							tester(resource)

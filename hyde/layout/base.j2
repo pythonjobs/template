@@ -36,8 +36,9 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
   {% block css %}
-  <link href='http://fonts.googleapis.com/css?family=Quattrocento+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="{{ media_url('css/site.css') }}">
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="{{ media_url('css/font.css') }}">
+  <link rel="stylesheet" href="{{ media_url('css/site.css') }}"> 
   {% endblock css %}
 
   {% block headjs %}
@@ -52,18 +53,14 @@
   <div id="container">
       {% block container %}
       <div id="main" role="main">
-          <header class="banner clearfix">
-          <a href="/"><img src='{{ media_url('images/logo.png') }}' id="logo"/></a>
-          {% block header -%}
-            <h1></h1>
-            <h3></h3>
-          {%- endblock %}
-          {% block nav %}
-          {% from "macros.j2" import render_nav with context %}
-          {{ render_nav(menu, 'main_nav') }}
-          {% endblock %}
+          <header>
+            <div class="in">
+              <div id="logo"><a href="/"><i class="i-logo"></i></a></div>
+              <div id="title"><a href="/"><span>pythonjobs</span>.github.io</a></div>
+              <div class="sub">A free, community run, jobs board</div>
+            </div>
           </header>
-          <section class="content">
+          <section id="content">
           {% block main %}
           {% endblock main %}
           </section>
@@ -71,7 +68,11 @@
     {% endblock container %}
   </div> <!--! end of #container -->
   <footer>
-      Pythonjobs - <a href="http://hyde.github.io/">hyde</a>.
+    <a class="about" href="https://www.github.com/pythonjobs/jobs">
+      Have a job to advertise? Create a pull-request <i class="i-github"></i>
+    </a>
+      Pythonjobs - Hosted by 
+      <a href="https://www.github.com/pythonjobs/jobs" target="_blank">github</a>, generated with <a href="http://hyde.github.io/">hyde</a>.
   </footer>
   {% endblock content%}
   {% block js %}
@@ -84,13 +85,6 @@
 
   {% block scripts %}
   {% endblock scripts %}
-
-
-  <!--[if lt IE 7 ]>
-    <script src="js/libs/dd_belatedpng.js"></script>
-    <script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
-  <![endif]-->
-
   {% block analytics %}
   {% include "analytics.j2" %}
   {% endblock analytics %}
