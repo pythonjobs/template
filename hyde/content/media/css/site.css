@@ -206,8 +206,8 @@ nav.main a{
   margin-left: 15px;
 }
 
-article.job{
-
+article.job h1{
+  margin-top: 20px;
 }
 article.job ul,
 article.job ol{
@@ -240,5 +240,10 @@ article.job .head .tag{
 }
 
 article.job .contact{
-   
+  color: #666;
+  font-weight: lighter;
+}
+article.job .contact span{
+  font-weight: normal;
+  color: black;
 }

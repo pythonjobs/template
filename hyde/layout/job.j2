@@ -62,15 +62,26 @@
     </div>
 
     <div class="contact">
-    <h1>Contact</h1>
+        <h1>Contact</h1>
         <div class="field">
             Name: <span>{{ resource.meta.contact.name }}</span>
         </div>
         <div class="field">
-            Email: <span><a href="mailto:{{ resource.meta.contact.email }}">{{ resource.meta.contact.email }}</a></span>
+            Email: <span><a href="mailto:{{ resource.meta.contact.email }}?subject=pythonjobs.github.io - {{resource.meta.title|urlencode}}">{{ resource.meta.contact.email }}</a></span>
         </div>
-        {% if reqsource.meta.url %}
+        {% if resource.meta.url %}
+        <div class="field">
+            Website: <span><a href="{{ resource.meta.url }}">{{ resource.meta.url }}</a></span>
+        </div>
         {% endif %}
+        {% for key, value in resource.meta.contact %}
+            {% if key in ['name', 'url', 'email'] %}
+            {% else %}
+                <div class="field">
+                    {{ key|title }}: <span>{{ value }}</span>
+                </div>
+            {% endif %}
+        {% endfor %}
     </div>
 
 
