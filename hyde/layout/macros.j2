@@ -5,37 +5,3 @@
     <span class="info"><i class="i-calendar"></i> {{ res.meta.created.strftime('%a, %d %b %Y') }}</span>
     <p>{{ job.detail|markdown|typogrify|striptags|truncate(200) }}</p>
 {% endmacro %}
-
-{% macro render_nav(menu, cls=None) -%}
-{% if menu -%}
-<nav {{'class='~cls if cls }}>
-    <ul>
-        {% for item in menu -%}
-        {% set active = False -%}
-        {% if item.type == 'page' -%}
-            {% set active = (resource.url ==
-                site.content.resource_from_relative_path(item.url).url) -%}
-            {% set url = content_url(item.url) %}
-        {% elif item.type == 'node' -%}
-            {% set active = (node ==
-                site.content.node_from_relative_path(item.url)) -%}
-            {% set url = content_url(item.url) %}
-        {% else -%}
-            {% set active = False %}
-            {% set url = item.url %}
-        {%- endif %}
-        {% set classes = ['button', 'white'] -%}
-        {% do classes.append('active') if active -%}
-        {% do classes.append(item.css_class) if item.css_class -%}
-        <li>
-            <a title="{{ item.description }}"
-                class="{{ classes|join(' ') }}"
-                href="{{ url }}">
-                {{ item.name }}
-            </a>
-        </li>
-        {%- endfor %}
-    </ul>
-</nav>
-{%- endif %}
-{%- endmacro %}

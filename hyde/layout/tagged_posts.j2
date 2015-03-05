@@ -1,29 +1,24 @@
 {% extends "base.j2" %}
-
+{% from "macros.j2" import render_excerpt with context %}
 {% block main %}
-<section class="archives">
-<h1 class="tag title">Jobs tagged with: {{ tag.name }}</h1>
-<ul class="posts clear">
-{% for resource in walker() -%}
-<li class="post clear">
-    <a href="{{ content_url(resource.url) }}">{{ resource.meta.title }}</a>
-    Posted <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
-        {{ resource.meta.created.strftime('%a, %d %b %Y') }}
-    </time>
-    
-    {% if resource.meta.tags %}
-    <ul class="tags">
-    {% for tag in resource.meta.tags %}
-    <li>
-        <a class="small" href="{{ content_url('tags/'~tag~'.html') }}">
-            {{ tag }}
+
+    <nav class="main">
+        <a class="backlink" href="./">
+            <i class='i-left'></i>
+            Show all tags
         </a>
-    </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-</li>
-{%- endfor %}
-</ul>
-</section>
+    </nav>
+
+    <h1>Jobs tagged with <b>{{ tag.name }}</b></h1>
+    <section class="job_list">
+        {% for job in walker() -%}
+            <div class="job">
+                <a class="go_button"
+                    href="{{ content_url(job.url) }}">
+                    Read more <i class="i-right"></i>
+                </a>
+                {{ render_excerpt(job, 'post') }}
+            </div>
+        {% endfor %}
+    </section>
 {% endblock %}
