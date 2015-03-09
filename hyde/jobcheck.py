@@ -41,6 +41,19 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 		self.assertTrue(' ' in contact.strip())
 		self.assertTrue(len(contact) > 3)
 
+	def test_location(self, resource):
+		""" Jobs must include a location """
+		location = resource.meta.location
+		self.assertTrue(len(location) >= 3)
+
+	VALID_CONTRACT_TYPES = set('contract,perm,temp,part-time,other'.split(','))
+	def test_type(self, resource):
+		""" Jobs must include a 'contract' type """
+		contract_type = resource.meta.contract.strip()
+		have_any = any(val in contract_type for val in self.VALID_CONTRACT_TYPES)
+		self.assertTrue(have_any,
+						"'contract' must contain one of: %s" % (', '.join(self.VALID_CONTRACT_TYPES)))
+
 	def test_created_date(self, resource):
 		""" Jobs must have a create date before now """
 		date = resource.meta.created
