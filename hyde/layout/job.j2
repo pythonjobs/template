@@ -45,6 +45,9 @@
             <i class="i-calendar"></i>
             {{ resource.meta.created.strftime('%a, %d %b %Y') }}
         </span>
+        <div>
+        Contract type: <span>{{ resource.meta.contract }}</span>.  Location: <span>{{ resource.meta.location }}</span>
+        </div>        
         {% if resource.meta.tags %}
         <div class="tags">
             <i class="i-tag"></i> Tags:
