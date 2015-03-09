@@ -18,6 +18,10 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 		if not condition:
 			raise AssertionError(message)
 
+	def assertFalse(self, condition, message="Assertion Failed"):
+		if condition:
+			raise AssertionError(message)
+
 	def test_title(self, resource):
 		""" Jobs must have a title """
 		self.assertTrue(len(resource.meta.title) > 3)
@@ -43,7 +47,13 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 		self.assertTrue(isinstance(date, datetime.date))
 		self.assertTrue(type(date) is datetime.date, # unfortunately isinstance fails us here
 						'created must be a date, not date time') 
-		self.assertTrue(date < datetime.date.today(), "%s is in the future" % date)
+		self.assertTrue(date <= datetime.date.today(), "%s is in the future" % date)
+
+	def test_no_index_tag(self, resource):
+		""" Job tags must not include the tag 'index' """
+		for tag in resource.meta.tags:
+			self.assertFalse(tag.strip().lower() == 'index', "Tags cannot include 'index'")
+
 
 	def begin_site(self):
 		jobs = self.site.content.node_from_relative_path('jobs/')
@@ -56,5 +66,5 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 					meta = resource.meta.to_dict()
 					for tester in self._get_testers():
 						assert tester.__doc__ is not None
-						with Log("Test %s" % (tester.__doc__)):
+						with Log("Test %s" % (tester.__doc__.strip())):
 							tester(resource)
