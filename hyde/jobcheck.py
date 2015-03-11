@@ -6,7 +6,7 @@ import traceback
 import functools
 from fin.contextlog import Log
 
-Log = functools.partial(Log, theme='mac')
+Log = functools.partial(Log)
 
 class CheckMetaPlugin(hyde.plugin.Plugin):
 
@@ -54,7 +54,7 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 	VALID_CONTRACT_TYPES = set('contract,perm,temp,part-time,other'.split(','))
 	def test_type(self, resource):
 		""" Jobs must include a 'contract' type """
-		contract_type = resource.meta.contract.strip()
+		contract_type = resource.meta.contract.strip().lower()
 		have_any = any(val in contract_type for val in self.VALID_CONTRACT_TYPES)
 		self.assertTrue(have_any,
 						"'contract' must contain one of: %s" % (', '.join(self.VALID_CONTRACT_TYPES)))
