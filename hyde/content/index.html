@@ -15,7 +15,7 @@ description: Free Jobs
 <h1>Most Recent Jobs</h1>
 {% from "macros.j2" import render_excerpt with context %}
 <section class="job_list">
-	{% for job in  site.content.walk_resources_sorted_by_time() %}
+	{% for job in site.content.walk_resources_sorted_by_time() %}
 		<div class="job">
 			<a class="go_button"
 		    	href="{{ content_url(job.url) }}">

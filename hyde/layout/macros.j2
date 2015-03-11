@@ -5,3 +5,7 @@
     <span class="info"><i class="i-calendar"></i> {{ res.meta.created.strftime('%a, %d %b %Y') }}</span>
     <p>{{ job.detail|markdown|typogrify|striptags|truncate(200) }}</p>
 {% endmacro %}
+
+{% macro full_url(rel) -%}
+https://pythonjobs.github.io{{ content_url(rel) }}
+{%- endmacro%}
