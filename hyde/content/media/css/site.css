@@ -206,6 +206,10 @@ nav.main a{
   margin-left: 15px;
 }
 
+article.job{
+  padding-bottom: 20px;
+}
+
 article.job h1{
   margin-top: 20px;
 }
@@ -238,6 +242,21 @@ article.job .head .tag{
   padding: 1px 5px;
   border-radius: 2px;
 }
+article.job h2{
+  font-weight: bold;
+  font-size: 120%;
+  margin-top: 20px;
+}
+article.job h3{
+  font-weight: bold;
+  margin-top: 20px;
+}
+article.job hr{
+  margin: 20px;
+}
+article.job p{
+  margin-top: 7px;
+}
 
 article.job .contact{
   color: #666;
@@ -246,4 +265,5 @@ article.job .contact{
 article.job .contact span{
   font-weight: normal;
   color: black;
+  margin-left: 5px;
 }

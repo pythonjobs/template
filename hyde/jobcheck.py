@@ -95,6 +95,6 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 								for line in traceback.format_exc().strip().splitlines():
 									l2.output(line)
 								l2.ok_msg = l2.fail_msg
-							last_exc = e
+								last_exc = e
 			if last_exc is not None:
 				raise last_exc
