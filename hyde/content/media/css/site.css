@@ -139,33 +139,44 @@ a:hover{
 }
 
 h1{
-  font-size: 170%;
+  font-size: 200%;
   font-weight: lighter;
   color: #2D76A8;
 }
 
 /* Listing Styles */
+
+.job a:hover {
+  text-decoration: underline;
+}
+
 section.job_list i{
   vertical-align: bottom;
   margin-bottom: 2px;
   display: inline-block;
   color: #666;
+  margin-right: 0.3em;
 }
+
 section.job_list .job{
-  box-shadow: 3px 3px 5px #ccc;
+  box-shadow: 3px 3px 5px #ddd;
   margin: 10px 0;
   background: #fafafa;
-  padding: 10px;
+  padding: 10px 15px;
+  border: solid #eee 1px;
 }
 
 section.job_list .info{
   margin-right: 15px;
+  color: gray;
+  font-weight: lighter;
 }
 
 section.job_list .job h1{
-  font-size: 130%;
-  font-weight: bolder;
+  font-size: 140%;
+  font-weight: light;
   color: #48a0dc;
+  margin-bottom: 0.1em;
 }
 
 section.job_list .go_button{
@@ -173,8 +184,10 @@ section.job_list .go_button{
   float: right;
   background: #48a0dc;
   color: white;
+  margin: 2px -3px 0 0;
   padding: 5px 8px;
-  box-shadow: 2px 2px 4px #ccc;
+  box-shadow: 1px 1px 3px #aaa;
+  transition: background-color 0.3s;
 }
 
 section.job_list .go_button i{
@@ -183,11 +196,14 @@ section.job_list .go_button i{
 
 section.job_list .go_button:hover{
   background: #2D76A8;
+  text-decoration: none;
 }
 
 section.job_list p{
-  color: #666;
-  margin-top: 5px;
+  color: black;
+  font-weight: 100;
+  font-size: 95%;
+  margin-top: 1em;
 }
 
 
@@ -256,6 +272,7 @@ article.job hr{
 }
 article.job p{
   margin-top: 7px;
+
 }
 
 article.job .contact{
