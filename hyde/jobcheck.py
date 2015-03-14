@@ -86,6 +86,10 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 					continue
 				with Log(resource.name):
 					meta = resource.meta.to_dict()
+
+					# Ensure that all tags are lowercase
+					resource.meta.tags = [a.lower() for a in resource.meta.tags]
+
 					for tester in self._get_testers():
 						assert tester.__doc__ is not None
 						with Log("Test %s" % (tester.__doc__.strip())) as l2:
