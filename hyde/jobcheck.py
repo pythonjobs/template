@@ -100,5 +100,6 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 									l2.output(line)
 								l2.ok_msg = l2.fail_msg
 								last_exc = e
+								
 			if last_exc is not None:
 				raise last_exc

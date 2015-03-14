@@ -2,3 +2,4 @@ hyde/deploy/
 .hyde_deps
 *.py[cod]
 __pycache__/
+*.sublime-workspace
