@@ -1,9 +1,18 @@
 {% macro render_excerpt(res, class=None) %}
     {% refer to res.relative_path as job %}
     <h1><a href="{{ content_url(res.url) }}">{{ res.meta.title }}</a></h1>
+    
     <span class="info"><i class="i-company"></i> {{ res.meta.company }}</span>
-    <span class="info"><i class="i-calendar"></i> {{ res.meta.created.strftime('%a, %d %b %Y') }}</span>
-    <p>{{ job.detail|markdown|typogrify|striptags|truncate(200) }}</p>
+
+    <span class="info"><i class="i-location"></i> {{ res.meta.location }}</span>
+
+    <span class="info"><i class="i-contract"></i> {{ res.meta.contract }}</span>
+
+    
+    <p><span class="info"><i class="i-calendar"></i> {{ res.meta.created.strftime('%a, %d %b %Y') }}</span> {{ job.detail|markdown|typogrify|striptags|truncate(200) }}</p>
+
+    
+
 {% endmacro %}
 
 {% macro full_url(rel) -%}

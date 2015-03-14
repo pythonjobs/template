@@ -39,6 +39,14 @@ i {
 	content: "\e608";
 }
 
+.i-location:before {
+	content: "\e607";
+}
+
+.i-contract:before {
+	content: "\e607";
+}
+
 .i-logo:before {
 	content: "\e601";
 }
