@@ -60,7 +60,7 @@ jQuery(function ($) {
 
     function createTagButton(name) {
         var tag = $('<b />').text(name);
-        var close = $('<span>\u2A2F</span>').appendTo(tag);
+        var close = $('<span>\u00D7</span>').appendTo(tag);
         tag.appendTo('#selected-tags');
 
         close.click(function (event) {
@@ -97,7 +97,7 @@ jQuery(function ($) {
         $('#list-title').text(title);
     }
 
-    $('<span class="close">\u2A2F</span>').appendTo($('#filter')).click(function () {
+    $('<span class="close">\u00D7</span>').appendTo($('#filter')).click(function () {
         $('#filter').slideUp();
     });
 
