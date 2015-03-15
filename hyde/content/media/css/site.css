@@ -285,7 +285,7 @@ article.job .contact span{
   margin-left: 5px;
 }
 
-@media (max-width: 500px), (max-height: 500px) {
+@media (max-width: 630px), (max-height: 500px) {
     #title {
         font-size: 200%;
     }
