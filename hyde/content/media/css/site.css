@@ -46,11 +46,9 @@ i{
 
 body{
   font-family: 'Source Sans Pro', 'Verdana', sans-serif;
-  font-size: 17px;
   background-color: white;
   padding: 0;
   margin: 0;
-  min-width: 450px;
 }
 
 header{
@@ -59,7 +57,7 @@ header{
   left: 0;
   background-color: #48a0dc;
   padding: 10px;
-  text-align: right;  
+  text-align: right;
 }
 
 header .in{
@@ -78,9 +76,10 @@ header a:hover{
   text-shadow: 3px 3px 5px #2C7BB2;
   top: 6px;
 }
+
 #title{
   font-weight: lighter;
-  font-size: 40px;
+  font-size: 300%;
   color: #a3d2f2;
 }
 #title span{
@@ -91,8 +90,14 @@ header a:hover{
 
 /* Layout */
 
-html, body, #container { height: 100%; }
-body > #container { height: auto; min-height: 100%; }
+
+#container {
+    margin: 0 10px;
+}
+
+header {
+    margin: 0 -10px;
+}
 
 #main{
   padding-bottom: 3.5em; /* 3m of footer at the bottom */
@@ -109,13 +114,10 @@ footer{
   color: white;
   position: relative;
   margin:0;
-  padding:0;
-  height: 3em;
-  max-height: 3em;
+  padding: 0.6em 1em;
   margin-top: -3em;
   line-height: 1.3em;
   clear: both;
-  width: 100%;
   overflow: hidden;
   text-align: center;
 }
@@ -182,7 +184,7 @@ section.job_list .go_button{
   float: right;
   background: #48a0dc;
   color: white;
-  margin: 2px -3px 0 0;
+  margin: 2px -3px 8px 10px;
   padding: 5px 8px;
   box-shadow: 1px 1px 3px #aaa;
   transition: background-color 0.3s;
@@ -281,4 +283,14 @@ article.job .contact span{
   font-weight: normal;
   color: black;
   margin-left: 5px;
+}
+
+@media (max-width: 500px), (max-height: 500px) {
+    #title {
+        font-size: 200%;
+    }
+
+    #logo {
+        top: -3px;
+    }
 }
