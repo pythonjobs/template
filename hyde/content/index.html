@@ -1,22 +1,35 @@
 ---
-extends: base.j2
-default_block: main
+extends: index.j2
 title: The Free Python Job Board
 description: And international job board for Python roles
+default_block: main
 ---
 
 <nav class="main">
-    <a class="backlink" href="tags/">
-        <i class='i-tag'></i>
-        Filter Jobs by Tag
-    </a>
+    <div id="selected-tags">
+        <a id="filter-link" class="backlink" href="tags/">
+            <i class='i-tag'></i>
+            Filter by tag
+        </a>
+    </div>
+    <div id="filter">
+    <h3>Filter jobs by tag</h3>
+    <ul>
+    {% for name, path in site.tagger.tags|sort %}
+        <li>
+            <a href="{{ content_url('/tags/'~name~'.html') }}">{{name}}</a>
+        </li>
+    {% endfor %}
+    </ul>
+    </div>
 </nav>
 
-<h1>Most Recent Jobs</h1>
+
+<h1 id="list-title">Most Recent Jobs</h1>
 {% from "macros.j2" import render_excerpt with context %}
 <section class="job_list">
 	{% for job in site.content.walk_resources_sorted_by_time() %}
-		<div class="job">
+        <div class="job" data-tags="{% for t in job.tags %}{{t.name}}{% if not loop.last%},{% endif %}{% endfor %}">
 			<a class="go_button"
 		    	href="{{ content_url(job.url) }}">
 		    	Read more <i class="i-right"></i>

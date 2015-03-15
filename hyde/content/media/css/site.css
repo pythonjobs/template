@@ -211,7 +211,6 @@ section.job_list p{
 nav.main{
   color: #666;
   text-align: right;
-  text-shadow: 2px 2px 3px #ddd;
 }
 nav.main i{
   display: inline-block;
@@ -283,6 +282,73 @@ article.job .contact span{
   font-weight: normal;
   color: black;
   margin-left: 5px;
+}
+
+#filter {
+    position: relative;
+    display: none;
+
+    background-color: #48a0dc;
+    padding: 10px 30px;
+    color: white;
+    text-align: left;
+}
+
+#filter .close {
+    position: absolute;
+    vertical-align: top;
+    top: 8px;
+    right: 10px;
+    cursor: pointer;
+}
+
+#filter ul {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+
+    margin: 1em 0;
+    padding: 0;
+}
+
+#filter h3 {
+    font-weight: lighter;
+    font-size: 200%;
+}
+
+#filter li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#selected-tags a,
+#filter a {
+    margin: 0;
+}
+
+#filter a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+#selected-tags {
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+#selected-tags b {
+    background-color: #48a0dc;
+    color: white;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    margin-left: 3px;
+    font-weight: normal;
+}
+
+#selected-tags b span {
+    margin-left: 4px;
+    cursor: pointer;
 }
 
 @media (max-width: 630px), (max-height: 500px) {
