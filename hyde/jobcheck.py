@@ -85,6 +85,12 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         """ Job filename must end in .html """
         self.assertTrue(resource.name.lower().endswith('.html'))
 
+    @staticmethod
+    def fix_tag(tag):
+        return tag.lower()  # .replace(" ", "_")
+        # uncomment the last bit if we decide to disallow
+        # spaces in tags
+
     def begin_site(self):
         jobs = self.site.content.node_from_relative_path('jobs/')
         with Log("Checking jobs metadata") as l:
@@ -94,8 +100,9 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
                     l.output("Skipping %s" % (resource.name, ))
                     continue
                 with Log(resource.name):
+
                     # Ensure that all tags are lowercase
-                    resource.meta.tags = [a.lower()
+                    resource.meta.tags = [self.fix_tag(a)
                                           for a in resource.meta.tags]
 
                     for tester in self._get_testers():
