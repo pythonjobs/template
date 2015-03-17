@@ -33,7 +33,6 @@ context:
                 url: https://github.com/pythonjobs/jobs
 meta:
     nodemeta: meta.yaml
-    viewport: width=device-width, user-scalable=no
 sorter:
     time:
         attr:

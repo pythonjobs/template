@@ -6,41 +6,35 @@
 <!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
-  {% block starthead %}{% endblock starthead %}
-  <meta charset="utf-8">
-
-  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-       Remove this if you use the .htaccess -->
-  <meta http-equiv="X-UA-Compatible" content="{{ resource.meta.compatibility }}">
-
-  <!-- encoding must be specified within the first 512 bytes
-        www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#charset -->
-
   <!-- meta element for compatibility mode needs to be before
         all elements except title & meta
         msdn.microsoft.com/en-us/library/cc288325(VS.85).aspx -->
-  <!-- Chrome Frame is only invoked if meta element for
-        compatibility mode is within the first 1K bytes
-        code.google.com/p/chromium/issues/detail?id=23003 -->
+  <meta charset="utf-8">
+  {% block starthead %}{% endblock starthead %}
 
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+       Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>{% block title %}{{ resource.meta.title }}{% endblock %}</title>
-  <meta name="description" content="{{ resource.meta.description }}">
-  <meta name="author" content="{{ resource.meta.author }}">
+  <meta name="description" content="{{ resource.meta.description|default(resource.meta.title) }}">
 
-  <!--  Mobile viewport optimized: j.mp/bplateviewport -->
-  <meta name="viewport" content="{{ resource.meta.viewport }}">
+  <!--  Because we have responsive styles, don't set device-width which makes rotation look weird
+        and allow users to zoom-in/out as they wish -->
+  <meta name="viewport" content="initial-scale=1">
 
-  <!-- Place favicon.ico & apple-touch-icon.png
-        in the root of your domain and delete these references -->
   <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="/touch-icon-iphone.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/touch-icon-ipad.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/touch-icon-iphone-retina.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/touch-icon-ipad-retina.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/touch-icon-iphone6.png">
+  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="The Free Python Job Board's atom feed" />
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"/>
 
   {% block css %}
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="{{ media_url('css/font.css') }}">
   <link rel="stylesheet" href="{{ media_url('css/site.css') }}">
-  <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="The Free Python Job Board's atom feed" />
-  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml"/>
   {% endblock css %}
 
   {% block headjs %}
@@ -58,7 +52,7 @@
           <header>
             <div class="in">
               <div id="logo"><a href="/"><i class="i-pyjobslogo"></i></a></div>
-              <div id="title"><a href="/">The Free <span>Python</span> Job Board</a></div>
+              <div id="title"><a href="/">The Free <span>Python Job Board</span></a></div>
               <div class="sub">for the global Python community</div>
             </div>
           </header>
