@@ -1,0 +1,20 @@
+{% from "macros.j2" import full_url with context %}
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
+
+    {% for res in resource.node.walk_resources_sorted_by_time() %}
+        {% refer to res.relative_path as job %}
+        <url>
+        <loc>{{res.url}}</loc>
+        </url>
+    {% endfor %}
+
+
+  <url>
+    <loc>http://www.example.com/foo.html</loc> 
+  </url>
+</urlset>
+
+
