@@ -12,7 +12,6 @@ Log = functools.partial(Log)
 class CheckMetaPlugin(hyde.plugin.Plugin):
 
     def _get_testers(self):
-        tester_re = 'test_'
         for name in dir(self):
             if not name.startswith('test_'):
                 continue
@@ -39,8 +38,9 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
     def test_email(self, resource):
         """ Jobs must include a valid email """
         email = resource.meta.contact.email
+        pattern = '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$'
         self.assertTrue(
-            re.match('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$', email, re.I) is not None)
+            re.match(pattern, email, re.I) is not None)
 
     def test_name(self, resource):
         """ Jobs must include a contact name"""
@@ -61,7 +61,8 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         have_any = any(
             val in contract_type for val in self.VALID_CONTRACT_TYPES)
         self.assertTrue(have_any,
-                        "'contract' must contain one of: %s" % (', '.join(self.VALID_CONTRACT_TYPES)))
+                        "'contract' must contain one of: %s" %
+                        (', '.join(self.VALID_CONTRACT_TYPES)))
 
     def test_created_date(self, resource):
         """ Jobs must have a create date before now """
