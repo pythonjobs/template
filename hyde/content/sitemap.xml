@@ -1,0 +1,5 @@
+===
+title: Google Sitemap
+extends: sitemap.j2
+listable: false
+===
