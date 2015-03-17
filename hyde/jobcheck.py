@@ -68,7 +68,9 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         """ Jobs must have a create date before now """
         date = resource.meta.created
         self.assertTrue(isinstance(date, datetime.date))
-        self.assertTrue(type(date) is datetime.date,  # unfortunately isinstance fails us here
+
+        # unfortunately isinstance fails us here
+        self.assertTrue(type(date) is datetime.date,
                         'created must be a date, not date time')
         self.assertTrue(
             date <= datetime.date.today(), "%s is in the future" % date)
@@ -92,8 +94,6 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
                     l.output("Skipping %s" % (resource.name, ))
                     continue
                 with Log(resource.name):
-                    meta = resource.meta.to_dict()
-
                     # Ensure that all tags are lowercase
                     resource.meta.tags = [a.lower()
                                           for a in resource.meta.tags]
