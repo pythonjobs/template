@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icons';
-	src:url('../fonts/icons.eot?-qazrfy');
-	src:url('../fonts/icons.eot?#iefix-qazrfy') format('embedded-opentype'),
-		url('../fonts/icons.woff?-qazrfy') format('woff'),
-		url('../fonts/icons.ttf?-qazrfy') format('truetype'),
-		url('../fonts/icons.svg?-qazrfy#icons') format('svg');
+	src:url('../fonts/icons.eot?-cfko4a');
+	src:url('../fonts/icons.eot?#iefix-cfko4a') format('embedded-opentype'),
+		url('../fonts/icons.woff?-cfko4a') format('woff'),
+		url('../fonts/icons.ttf?-cfko4a') format('truetype'),
+		url('../fonts/icons.svg?-cfko4a#icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -27,6 +27,10 @@ i {
 	content: "\e60c";
 }
 
+.i-globe:before {
+	content: "\e60d";
+}
+
 .i-tag:before {
 	content: "\e60b";
 }
@@ -37,14 +41,6 @@ i {
 
 .i-company:before {
 	content: "\e608";
-}
-
-.i-location:before {
-	content: "\e607";
-}
-
-.i-contract:before {
-	content: "\e607";
 }
 
 .i-logo:before {

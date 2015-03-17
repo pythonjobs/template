@@ -4,11 +4,10 @@
     
     <span class="info"><i class="i-company"></i> {{ res.meta.company }}</span>
 
-    <span class="info"><i class="i-location"></i> {{ res.meta.location }}</span>
+    <span class="info"><i class="i-globe"></i> {{ res.meta.location }}</span>
 
-    <span class="info"><i class="i-contract"></i> {{ res.meta.contract }}</span>
+    <span class="info"><i class="i-chair"></i> {{ res.meta.contract }}</span>
 
-    
     <p><span class="info"><i class="i-calendar"></i> {{ res.meta.created.strftime('%a, %d %b %Y') }}</span> {{ job.detail|markdown|typogrify|striptags|truncate(200) }}</p>
 
     

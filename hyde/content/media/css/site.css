@@ -44,13 +44,17 @@ i{
 
 /* === Header === */
 
+html {
+    height: 100%;
+}
+
 body{
   font-family: 'Source Sans Pro', 'Verdana', sans-serif;
-  font-size: 17px;
   background-color: white;
-  padding: 0;
+  padding: 0 0;
   margin: 0;
-  min-width: 450px;
+  min-height: 100%;
+  position: relative;
 }
 
 header{
@@ -59,7 +63,7 @@ header{
   left: 0;
   background-color: #48a0dc;
   padding: 10px;
-  text-align: right;  
+  text-align: right;
 }
 
 header .in{
@@ -78,9 +82,10 @@ header a:hover{
   text-shadow: 3px 3px 5px #2C7BB2;
   top: 6px;
 }
+
 #title{
   font-weight: lighter;
-  font-size: 40px;
+  font-size: 300%;
   color: #a3d2f2;
 }
 #title span{
@@ -91,11 +96,13 @@ header a:hover{
 
 /* Layout */
 
-html, body, #container { height: 100%; }
-body > #container { height: auto; min-height: 100%; }
+#container {
+    margin: 0 10px;
+    padding-bottom: 80px;
+}
 
-#main{
-  padding-bottom: 3.5em; /* 3m of footer at the bottom */
+header {
+    margin: 0 -10px;
 }
 
 header .in,
@@ -107,16 +114,13 @@ header .in,
 footer{
   background: #555;
   color: white;
-  position: relative;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   margin:0;
-  padding:0;
-  height: 3em;
-  max-height: 3em;
-  margin-top: -3em;
+  padding: 0.6em 1em;
   line-height: 1.3em;
-  clear: both;
-  width: 100%;
-  overflow: hidden;
   text-align: center;
 }
 
@@ -182,7 +186,7 @@ section.job_list .go_button{
   float: right;
   background: #48a0dc;
   color: white;
-  margin: 2px -3px 0 0;
+  margin: 2px -3px 8px 10px;
   padding: 5px 8px;
   box-shadow: 1px 1px 3px #aaa;
   transition: background-color 0.3s;
@@ -209,7 +213,6 @@ section.job_list p{
 nav.main{
   color: #666;
   text-align: right;
-  text-shadow: 2px 2px 3px #ddd;
 }
 nav.main i{
   display: inline-block;
@@ -281,4 +284,81 @@ article.job .contact span{
   font-weight: normal;
   color: black;
   margin-left: 5px;
+}
+
+#filter {
+    position: relative;
+    display: none;
+
+    background-color: #48a0dc;
+    padding: 10px 30px;
+    color: white;
+    text-align: left;
+}
+
+#filter .close {
+    position: absolute;
+    vertical-align: top;
+    top: 8px;
+    right: 10px;
+    cursor: pointer;
+}
+
+#filter ul {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+
+    margin: 1em 0;
+    padding: 0;
+}
+
+#filter h3 {
+    font-weight: lighter;
+    font-size: 200%;
+}
+
+#filter li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#selected-tags a,
+#filter a {
+    margin: 0;
+}
+
+#filter a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+#selected-tags {
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+#selected-tags b {
+    background-color: #48a0dc;
+    color: white;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    margin-left: 3px;
+    font-weight: normal;
+}
+
+#selected-tags b span {
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+@media (max-width: 630px), (max-height: 500px) {
+    #title {
+        font-size: 200%;
+    }
+
+    #logo {
+        top: -3px;
+    }
 }
