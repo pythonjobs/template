@@ -55,6 +55,7 @@ body{
   margin: 0;
   min-height: 100%;
   position: relative;
+  min-width: 350px;
 }
 
 header{
@@ -85,12 +86,10 @@ header a:hover{
 
 #title{
   font-weight: lighter;
-  font-size: 300%;
-  color: #a3d2f2;
+  font-size: 270%;
+  color: #22567B;
 }
 #title span{
-  font-weight: lighter;
-  font-style: normal;
   color: white;
 }
 
@@ -172,21 +171,22 @@ section.job_list .job{
 
 section.job_list .info{
   margin-right: 15px;
-  color: gray;
+  color: #777;
+  white-space: nowrap;
 }
 
 section.job_list .job h1{
   font-size: 140%;
-  color: #48a0dc;
+  font-weight: normal;
   margin-bottom: 0.1em;
 }
 
 section.job_list .go_button{
   display: block;
   float: right;
-  background: #48a0dc;
+  background: #2D76A8;
   color: white;
-  margin: 2px -3px 8px 10px;
+  margin: -4px -6px 3px 3px;
   padding: 5px 8px;
   box-shadow: 1px 1px 3px #aaa;
   transition: background-color 0.3s;
@@ -197,13 +197,13 @@ section.job_list .go_button i{
 }
 
 section.job_list .go_button:hover{
-  background: #2D76A8;
+  background: #12496E;
   text-decoration: none;
 }
 
 section.job_list p{
   color: black;
-  font-weight: 100;
+  font-weight: lighter;
   font-size: 95%;
   margin-top: 1em;
 }
@@ -353,7 +353,7 @@ article.job .contact span{
     cursor: pointer;
 }
 
-@media (max-width: 630px), (max-height: 500px) {
+@media (max-width: 630px){
     #title {
         font-size: 200%;
     }
@@ -362,3 +362,20 @@ article.job .contact span{
         top: -3px;
     }
 }
+
+@media (max-width: 470px) {
+  #title span{
+    display: block;
+  }
+  #logo{
+    top: 15px;
+  }
+  section.job_list .job h1{
+    font-size: 110%;
+    min-height: 32px;
+  }
+  section.job_list .job .go_button{
+    padding: 3px 5px;
+  }
+}
+
