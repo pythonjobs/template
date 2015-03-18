@@ -34,7 +34,7 @@
             {{ resource.meta.title }}
     </h1>
     <div class="head">
-        Posted by 
+        Posted by
         <span>
             {% if resource.meta.url %}
             <a href="{{ resource.meta.url }}" target="_blank">
@@ -52,15 +52,15 @@
         </span>
         <div>
         Contract type: <span>{{ resource.meta.contract }}</span>.  Location: <span>{{ resource.meta.location }}</span>
-        </div>        
+        </div>
         {% if resource.meta.tags %}
         <div class="tags">
             <i class="i-tag"></i> Tags:
             <ul class="tags clear">
                 {% for tag in resource.meta.tags %}
                     <li>
-                        <a class="tag" href="{{ content_url('tags/'~tag~'.html') }}">
-                            {{ tag }}
+                        <a class="tag" href="{{ content_url('tags/'~tag|lower~'.html') }}">
+                            {{ tag|lower }}
                         </a>
                     </li>
                 {% endfor %}
