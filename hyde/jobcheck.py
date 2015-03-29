@@ -43,7 +43,7 @@ class LocationFinder(object):
 
     def find_location(self, location):
         if location in self.known_locations:
-            Log.output("Location %s already known" % (location, ))
+            #log.output("Location %s already known" % (location, ))
             return self.known_locations[location]
         with Log("Querying Google API for location"):
             result = self.query_location(location)
@@ -147,7 +147,7 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         with Log("Finding job location"):
             coords = self.location_finder.find_location(location)
             if coords is not None:
-                Log.output(str(coords))
+                #Log.output(str(coords))
                 resource.meta._coords = coords
 
     def begin_site(self):
