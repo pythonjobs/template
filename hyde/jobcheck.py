@@ -15,7 +15,7 @@ import jinja2
 
 class LocationFinder(object):
     PUBLISHED_LOCATIONS = 'http://pythonjobs.github.io/media/geo.json'
-    API_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
+    API_URL = 'http://maps.googleapis.com/maps/api/geocode/json'
 
     def _get_json(self, url):
         with Log('Getting %s' % url):
@@ -138,7 +138,9 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         # uncomment the last bit if we decide to disallow
         # spaces in tags
 
-    def lookup_location(self, resource):
+    def test_lookup_location(self, resource):
+        """Get the latitude longitude values for this location"""
+        # This is NOT a test, but performs useful per-node things
         location = getattr(resource.meta.contact, 'address', None)
         if location is None:
             location = resource.meta.location
@@ -172,8 +174,8 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
                                     l2.output(line)
                                 l2.ok_msg = l2.fail_msg
                                 last_exc = e
-                    self.lookup_location(resource)
 
             if last_exc is not None:
-                raise last_exc
+                pass
+                # raise last_exc
         self.site.locations = json.dumps(self.location_finder.known_locations)
