@@ -56,10 +56,12 @@
               <div class="sub">for the global Python community</div>
             </div>
           </header>
-          <section id="content">
-          {% block main %}
-          {% endblock main %}
-          </section>
+          {% block below_header %}
+            <section id="content">
+            {% block main %}
+            {% endblock main %}
+            </section>
+          {% endblock %}
       </div>
     {% endblock container %}
   </div> <!--! end of #container -->
