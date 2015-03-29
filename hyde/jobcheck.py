@@ -14,7 +14,7 @@ import jinja2
 
 
 def add_template_filters(site):
-    print site.config
+    site.config['jinja2']
 
 class LocationFinder(object):
     PUBLISHED_LOCATIONS = 'http://pythonjobs.github.io/media/geo.json'
@@ -176,9 +176,8 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
                                     l2.output(line)
                                 l2.ok_msg = l2.fail_msg
                                 last_exc = e
-                    print self.lookup_location(resource)
+                    self.lookup_location(resource)
 
             if last_exc is not None:
                 raise last_exc
         self.site.locations = json.dumps(self.location_finder.known_locations)
-        print self.site.locations
