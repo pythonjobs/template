@@ -1,15 +1,65 @@
 # -*- coding: utf-8 -*-
-import hyde.plugin
+
 import datetime
+import functools
+import json
 import re
 import traceback
-import functools
+import urllib
+
 from fin.contextlog import Log
+import fin.cache
+import hyde.plugin
+import jinja2
 
-Log = functools.partial(Log)
 
+def add_template_filters(site):
+    print site.config
+
+class LocationFinder(object):
+    PUBLISHED_LOCATIONS = 'http://pythonjobs.github.io/media/geo.json'
+    API_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
+
+    def _get_json(self, url):
+        with Log('Getting %s' % url):
+            res = urllib.urlopen(url)
+            if res.code != 200:
+                return {}
+            try:
+                return json.load(res)
+            except:
+                return {}
+
+    @fin.cache.property
+    def known_locations(self):
+        return self._get_json(self.PUBLISHED_LOCATIONS)
+
+    def query_location(self, location):
+        query = urllib.urlencode({'address': location})
+        url = self.API_URL + '?' + query
+        data = self._get_json(url)
+        results = data.get('results', [])
+        if not results:
+            return None
+        best_match = results[0]
+        return best_match.get('geometry', {}).get('location', None)
+
+    def find_location(self, location):
+        if location in self.known_locations:
+            Log.output("Location %s already known" % (location, ))
+            return self.known_locations[location]
+        with Log("Querying Google API for location"):
+            result = self.query_location(location)
+            if result:
+                self.known_locations[location] = result
+            return result
+    
 
 class CheckMetaPlugin(hyde.plugin.Plugin):
+
+    @fin.cache.property
+    def location_finder(self):
+        return LocationFinder()
 
     def _get_testers(self):
         for name in dir(self):
@@ -91,7 +141,18 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         # uncomment the last bit if we decide to disallow
         # spaces in tags
 
+    def lookup_location(self, resource):
+        location = getattr(resource.meta.contact, 'address', None)
+        if location is None:
+            location = resource.meta.location
+        with Log("Finding job location"):
+            coords = self.location_finder.find_location(location)
+            if coords is not None:
+                Log.output(str(coords))
+                resource.meta._coords = coords
+
     def begin_site(self):
+        add_template_filters(self.site)
         jobs = self.site.content.node_from_relative_path('jobs/')
         with Log("Checking jobs metadata") as l:
             last_exc = None
@@ -115,6 +176,9 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
                                     l2.output(line)
                                 l2.ok_msg = l2.fail_msg
                                 last_exc = e
+                    print self.lookup_location(resource)
 
             if last_exc is not None:
                 raise last_exc
+        self.site.locations = json.dumps(self.location_finder.known_locations)
+        print self.site.locations

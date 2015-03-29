@@ -1,0 +1,156 @@
+---
+extends: base.j2
+title: The Free Python Job Board
+description: An international job board for Python roles
+
+---
+{% from "macros.j2" import render_excerpt with context %}
+{% block headjs %}
+{{ super() }}
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?"></script>
+<script type="text/javascript" src="/media/js/libs/markcluster.js"></script>
+
+<style>
+  footer{
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    height: 2.2em;
+    box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.2);
+  }
+  #main header{
+    position: fixed;
+    left: 0; right: 0; top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  }
+  #map-container{
+    position: fixed;
+    left: 0; right:0;
+  }
+  .gm-button-style{
+    margin: 5px;
+    margin-right: -2px;
+    direction: ltr;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+    color: rgb(0, 0, 0);
+    -webkit-user-select: none;
+    font-size: 11px;
+    padding: 1px 6px;
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+    -webkit-background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.14902);
+    -webkit-box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+    box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+    min-width: 24px;
+    font-weight: 500;
+    background-color: white;
+    background-clip: padding-box;
+  }
+  .gm-button-style i{
+    margin-bottom: 1px;
+  }
+</style>
+{% endblock %}
+
+{% block below_header %}
+<div class="controls">
+  <div id='returnlink' class="gm-button-style">
+    <a href="/"><i class='i-list'></i> Return to list</a>
+  </div>
+</div>
+<div id="map-container">
+  <div id='map-el' style="height: 100%; width: 100%;"></div>
+</div>
+{% endblock %}
+
+{% block js %}
+  {{ super() }}
+  <script type="text/javascript">
+    var jobs = {};
+    {% for job in site.content.walk_resources_sorted_by_time() %}
+      {% if job.meta._coords %}
+        var key = '' + {{job.meta._coords['lat']}} + ':' + {{job.meta._coords['lng']}};
+        if (!(key in jobs)) { jobs[key] = []; }
+        jobs[key].push({
+          coords: {{ job.meta._coords|jsonify }},
+          content: {{ render_excerpt(job, class=None)|jsonify }}
+        });
+      {% endif %}
+    {% endfor %}
+    console.log(jobs);
+    var MAP_OPTIONS = {
+      center: { lat: 40, lng: 0},
+      zoom: 1,
+      styles: [
+        {
+          "featureType": "poi",
+          "elementType": "labels",
+          "stylers": [
+            { "visibility": "off" }
+          ]
+        }
+      ]
+    };
+    $(function() {
+      var mapEl = $('#map-el');
+      var containerEl = $('#map-container');
+      var footerEl = $("footer");
+      var headerEl = $("#main header");
+      var homelink = $("#returnlink");
+
+      function resize() {
+        var top = headerEl.outerHeight();
+        var bottom = footerEl.position().top;
+
+        containerEl.css({
+          position: 'fixed',
+          top: top + 'px',
+          height: (bottom-top) + 'px'
+        });
+      }
+
+      $(window).resize(resize);
+      var map = new google.maps.Map(mapEl[0], MAP_OPTIONS);
+      map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homelink[0]);
+      var bounds = new google.maps.LatLngBounds();
+      var infoWindows = [];
+      var markers = [];
+      mapevent = google.maps.event.addListener;
+
+      $.each(jobs, function(_, job_list) {
+        var contents = [];
+        var coords;
+        $.each(job_list, function(_, job) {
+          coords = job.coords;
+          contents.push(job.content);
+        });
+        contents = contents.join('<hr/>');
+        $.each(job_list, function(_, job) {
+          var markerpos = new google.maps.LatLng(coords.lat, coords.lng);
+          bounds.extend(markerpos);
+          var infowindow = new google.maps.InfoWindow({
+            content: contents
+          });
+          infoWindows.push(infowindow);
+          var marker = new google.maps.Marker({position: markerpos,map: map});
+          markers.push(marker)
+          mapevent(marker, 'click', function() {
+              $.each(infoWindows, function(_, el) {
+                el.close();
+              })
+              infowindow.open(map, marker);
+            });
+        });
+      });
+      
+      var markerCluster = new MarkerClusterer(map, markers);
+      markerCluster.setGridSize(20);
+      markerCluster.setMaxZoom(10);
+      resize();
+      map.fitBounds(bounds);
+    })
+  </script>
+{% endblock %}
