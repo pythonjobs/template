@@ -13,9 +13,6 @@ import hyde.plugin
 import jinja2
 
 
-def add_template_filters(site):
-    site.config['jinja2']
-
 class LocationFinder(object):
     PUBLISHED_LOCATIONS = 'http://pythonjobs.github.io/media/geo.json'
     API_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
@@ -152,7 +149,6 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
                 resource.meta._coords = coords
 
     def begin_site(self):
-        add_template_filters(self.site)
         jobs = self.site.content.node_from_relative_path('jobs/')
         with Log("Checking jobs metadata") as l:
             last_exc = None
