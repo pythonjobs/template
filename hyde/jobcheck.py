@@ -92,8 +92,8 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
     def test_name(self, resource):
         """ Jobs must include a contact name"""
         contact = resource.meta.contact.name
-        self.assertTrue(' ' in contact.strip())
-        self.assertTrue(len(contact) > 2)
+        #self.assertTrue(' ' in contact.strip())
+        self.assertTrue(len(contact.strip()) > 2)
 
     def test_location(self, resource):
         """ Jobs must include a location """
