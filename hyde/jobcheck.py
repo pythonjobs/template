@@ -93,7 +93,7 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         """ Jobs must include a contact name"""
         contact = resource.meta.contact.name
         self.assertTrue(' ' in contact.strip())
-        self.assertTrue(len(contact) > 3)
+        self.assertTrue(len(contact) > 2)
 
     def test_location(self, resource):
         """ Jobs must include a location """
@@ -176,6 +176,5 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
                                 last_exc = e
 
             if last_exc is not None:
-                pass
-                # raise last_exc
+                raise last_exc
         self.site.locations = json.dumps(self.location_finder.known_locations)
