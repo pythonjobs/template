@@ -50,7 +50,7 @@ class LocationFinder(object):
             if result:
                 self.known_locations[location] = result
             return result
-    
+
 
 class CheckMetaPlugin(hyde.plugin.Plugin):
 
@@ -138,7 +138,7 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         # uncomment the last bit if we decide to disallow
         # spaces in tags
 
-    def test_lookup_location(self, resource):
+    def txest_lookup_location(self, resource):
         """Get the latitude longitude values for this location"""
         # This is NOT a test, but performs useful per-node things
         location = getattr(resource.meta.contact, 'address', None)
@@ -177,4 +177,4 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 
             if last_exc is not None:
                 raise last_exc
-        self.site.locations = json.dumps(self.location_finder.known_locations)
+        #self.site.locations = json.dumps(self.location_finder.known_locations)

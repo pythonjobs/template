@@ -23,59 +23,52 @@ i {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.i-pyjobslogo:before {
-	content: "\e60c";
+.i-search:before {
+	content: "\e900";
 }
-
-.i-globe:before {
-	content: "\e60d";
+.i-searchcircle:before {
+	content: "\e901";
 }
-
-.i-tag:before {
-	content: "\e60b";
-}
-
-.i-calendar:before {
-	content: "\e609";
-}
-
-.i-company:before {
-	content: "\e608";
-}
-
-.i-logo:before {
-	content: "\e601";
-}
-
-.i-phone:before {
-	content: "\e602";
-}
-
-.i-post:before {
-	content: "\e603";
-}
-
-.i-email:before {
-	content: "\e604";
-}
-
-.i-list:before {
-	content: "\e605";
-}
-
-.i-left:before {
-	content: "\e606";
-}
-
-.i-right:before {
-	content: "\e607";
-}
-
 .i-chair:before {
 	content: "\e600";
 }
-
+.i-logo:before {
+	content: "\e601";
+}
+.i-phone:before {
+	content: "\e602";
+}
+.i-post:before {
+	content: "\e603";
+}
+.i-email:before {
+	content: "\e604";
+}
+.i-list:before {
+	content: "\e605";
+}
+.i-left:before {
+	content: "\e606";
+}
+.i-right:before {
+	content: "\e607";
+}
+.i-company:before {
+	content: "\e608";
+}
+.i-calendar:before {
+	content: "\e609";
+}
 .i-github:before {
 	content: "\e60a";
+}
+.i-tag:before {
+	content: "\e60b";
+}
+.i-pyjobslogo:before {
+	content: "\e60c";
+}
+.i-globe:before {
+	content: "\e60d";
 }
 
