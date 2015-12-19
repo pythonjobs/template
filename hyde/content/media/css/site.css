@@ -384,6 +384,10 @@ article.job .contact span{
   font-weight: bold;
 }
 
+.search_match .match{
+  background: yellow;
+}
+
 
 @media (max-width: 630px){
     #title {
