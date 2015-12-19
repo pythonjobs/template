@@ -7,7 +7,7 @@
     <span class="info"><i class="i-chair"></i> {{ res.meta.contract }}</span>
     <span class="info"><i class="i-company"></i> {{ res.meta.company }}</span>
     
-    <p> {{ job.detail|markdown|typogrify|striptags|truncate(220) }}</p>
+    <p class="detail"> {{ job.detail|markdown|typogrify|striptags|truncate(220) }}</p>
     
 {% endmacro %}
 

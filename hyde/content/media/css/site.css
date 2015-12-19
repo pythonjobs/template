@@ -384,8 +384,20 @@ article.job .contact span{
   font-weight: bold;
 }
 
+.search_match {
+  color: #888;
+}
 .search_match .match{
+  color: black;
   background: yellow;
+}
+
+.search_match .sep{
+  margin: 10px;
+}
+
+.job.has_match .detail{
+  display: none;
 }
 
 

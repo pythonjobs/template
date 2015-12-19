@@ -87,7 +87,7 @@
       var current = root_index;
       var rest = val;
       while (rest) {
-        if (Array.isArray(current)) { return []; }
+        if (Array.isArray(current)) { return current; }
         var match = match_substr(current, rest);
         if (!match) { return []; }
         current = current[match];
@@ -121,7 +121,7 @@
           var slug = $(el).data('slug');
           var order = $(el).data('order');
           var score = job_lookup[slug].score;
-          score = score > 8 ? 8 : score;
+          score = score > 20 ? 20 : score;
           return {score: score, order: parseInt(order, 10)};
         };
 
@@ -141,9 +141,12 @@
       }
       if (!matched.length) {
         return clear_search("No matches found");
-
       }
-      all_jobs.find('.search_match').text("");
+      all_jobs
+        .removeClass("has_match")
+        .find('.search_match')
+        .text("");
+
       var not_matched = all_jobs.not(matched);
       not_matched.hide();
       matched.show();
@@ -171,10 +174,13 @@
       pend_search();
     });
 
+    var last_search_val = null;
     function do_search() {
       load_index();
       if (root_index === null ||  job_list === null) { return; }
       var search_text = search_box.val().toLowerCase();
+      if (search_text == last_search_val) { return; }
+      last_search_val = search_text;
       if (!search_text) { clear_search(); return; }
       var parts = search_text.split(/\W+/g);
 
@@ -219,23 +225,79 @@
       var re_matcher = [];
       parts.forEach(function(part) { re_matcher.push(escapeRegExp(part));});
       var re = new RegExp("\\b(" + re_matcher.join("|") +")", 'ig');
-      var content = $("<div>").text(data).html();
-      content = content.replace(re, '<span class="match">$&</span>')
-      return content;
+      
+      var offsets = [];
+      var content = data.replace(re, function(match, _, offset) {
+        var PADDING = 35;
+        offsets.push({start: offset-PADDING, end: offset+match.length+PADDING});
+        return match;
+      })
+
+      var spans = [];
+      var MAX_LENGTH = 150;
+      var total_length = 0;
+      var current = null;
+      for(var i=0; i<offsets.length; ++i) {
+        var offset = offsets[i];
+        if (current === null) {
+          current = offset;
+        } else {
+          if (offset.start <= current.end) {
+            current.end = offset.end;
+            if (total_length + (current.end - current.start) >= MAX_LENGTH) break;
+          } else {
+            spans.push(current);
+            total_length += (current.end - current.start);
+            current = offset;
+          }
+        }
+        if (total_length >= MAX_LENGTH) break;
+      }
+      if (current !== null) { spans.push(current); }
+      if (!spans.length) return "";
+      
+      var output = '';
+      spans.forEach(function(span) {
+        var start = (span.start < 0) ? 0 : span.start;
+        if (start !== 0) {
+          output += '<span class="sep">&hellip;</span>';
+        }
+        var snippet = $("<div/>").text(content.slice(start, span.end)).html();
+        var highlighted = snippet.replace(re, function(match, _, offset) {
+          return '<span class="match">' + match + '</span>';
+        });
+        output += highlighted;
+      })
+      
+      return output;
     }
 
+    var excerpt_cache = {};
     function load_an_excerpt(el){
       var the_job = $(".job.needs_excerpt").first();
       if (!the_job.length) return;
 
       var slug = the_job.data('slug');
-      $.get("/excerpts/" + slug + ".txt")
-        .then(function(data) {
-          the_job.removeClass('needs_excerpt');
-          var excerpt = highlight_matches(data);
+
+      function update_job(data) {
+        the_job.removeClass('needs_excerpt');
+        var excerpt = highlight_matches(data);
+        if (excerpt) {
+          the_job.addClass("has_match");
           $(".search_match", the_job).html(excerpt);
-          load_an_excerpt();
-        });
+        }
+        window.setTimeout(load_an_excerpt, 10);
+      }
+
+      if (slug in excerpt_cache) {
+        update_job(excerpt_cache[slug]);
+      } else {
+        $.get("/excerpts/" + slug + ".txt")
+          .then(function(data) {  
+            excerpt_cache[slug] = data;
+            update_job(data);
+          })
+      }
     }
 
   });

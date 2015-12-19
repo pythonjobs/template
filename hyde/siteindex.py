@@ -93,7 +93,9 @@ class IndexerPlugin(hyde.plugin.Plugin):
                 heading.extract()
             tags = " ".join(resource.meta.get('tags', ''))
             company = resource.meta.get('company', '')
+            title = resource.meta.get('title', '')
             parts = [
+                ("Title: ",title, 10),
                 ("Company: ",company, 5),
                 ("Tags: ", tags, 5),
                 ("", body.text, 1),
