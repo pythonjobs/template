@@ -374,6 +374,8 @@ article.job .contact span{
   border-radius: 2px;
 }
 #text_search{
+  background: white;
+  border: none;
 }
 
 #search_info{
