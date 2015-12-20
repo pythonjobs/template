@@ -138,7 +138,7 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         # uncomment the last bit if we decide to disallow
         # spaces in tags
 
-    def txest_lookup_location(self, resource):
+    def test_lookup_location(self, resource):
         """Get the latitude longitude values for this location"""
         # This is NOT a test, but performs useful per-node things
         location = getattr(resource.meta.contact, 'address', None)
