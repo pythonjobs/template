@@ -177,4 +177,4 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
 
             if last_exc is not None:
                 raise last_exc
-        #self.site.locations = json.dumps(self.location_finder.known_locations)
+        self.site.locations = json.dumps(self.location_finder.known_locations)
