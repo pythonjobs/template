@@ -50,7 +50,7 @@ class LocationFinder(object):
             if result:
                 self.known_locations[location] = result
             return result
-    
+
 
 class CheckMetaPlugin(hyde.plugin.Plugin):
 

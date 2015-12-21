@@ -6,11 +6,14 @@ default_block: main
 ---
 
 <nav class="main">
-    <span id="selected-tags">
-        <a id="filter-link" class="backlink" href="tags/">
-            <i class='i-tag'></i>
-            Filter by tag
-        </a>
+    <span id="text_search_container">
+        <i class="i-search"></i>
+        <input 
+            type="text" 
+            name="search" 
+            id="text_search" 
+            placeholder="Search"
+            />
     </span>
     <span id="location">
         <a class="backlink" href="map.html">
@@ -33,14 +36,16 @@ default_block: main
 
 <h1 id="list-title">Most Recent Jobs</h1>
 {% from "macros.j2" import render_excerpt with context %}
+<div id="search_info" class="search_info hidden"></div>
 <section class="job_list">
 	{% for job in site.content.walk_resources_sorted_by_time() %}
-        <div class="job" data-tags="{% for t in job.tags %}{{t.name}}{% if not loop.last%},{% endif %}{% endfor %}">
+        <div class="job" data-order="{{loop.index0}}" data-slug="{{ job.slug }}" data-tags="{% for t in job.tags %}{{t.name}}{% if not loop.last%},{% endif %}{% endfor %}">
 			<a class="go_button"
 		    	href="{{ content_url(job.url) }}">
 		    	Read more <i class="i-right"></i>
 		    </a>
 		    {{ render_excerpt(job, 'post') }}
+            <div class="search_match"></div>
 		</div>
 	{% endfor %}
 </section>

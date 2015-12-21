@@ -4,6 +4,7 @@
     font-family: inherit;
     font-style: inherit;
     color: inherit;
+    outline: none;
     text-decoration:inherit;
     font-size: 100%;
     padding: 0;
@@ -162,11 +163,14 @@ section.job_list i{
 }
 
 section.job_list .job{
-  box-shadow: 2px 2px 4px #ddd;
   margin: 10px 0;
-  background: #fafafa;
+  background: #fafaf8;
   padding: 10px 15px;
-  border: solid #eee 1px;
+  border: solid #ddd 1px;
+}
+
+.hidden{
+  display: none;
 }
 
 section.job_list .info{
@@ -194,6 +198,7 @@ section.job_list .go_button{
 
 section.job_list .go_button i{
   color: inherit;
+  margin-left: 3px;
 }
 
 section.job_list .go_button:hover{
@@ -362,6 +367,41 @@ article.job .contact span{
     margin-left: 4px;
     cursor: pointer;
 }
+
+#text_search_container{
+  border: 1px solid #999;
+  padding: 0 4px;
+  border-radius: 2px;
+}
+#text_search{
+  background: white;
+  border: none;
+}
+
+#search_info{
+  background: #48a0dc;
+  text-align: center;
+  padding: 3px;
+  color: white;
+  font-weight: bold;
+}
+
+.search_match {
+  color: #888;
+}
+.search_match .match{
+  color: black;
+  background: yellow;
+}
+
+.search_match .sep{
+  margin: 10px;
+}
+
+.job.has_match .detail{
+  display: none;
+}
+
 
 @media (max-width: 630px){
     #title {
