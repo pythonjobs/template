@@ -123,6 +123,7 @@ class IndexerPlugin(hyde.plugin.Plugin):
                 # Because this is called from node_complete, it's too late to let the deployer
                 # copy the file for us, so have to do it manually
                 target = File(self.site.config.deploy_root_path.child(res.relative_deploy_path))
+                target.parent.make()
                 res.source_file.copy_to(target)
 
     def node_complete(self, node):
