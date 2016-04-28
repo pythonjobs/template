@@ -1,5 +1,10 @@
 hyde/deploy/
+hyde/content/jobs/
+hyde/content/tags/
+hyde/content/excerpts/
+hyde/content/text_index.json
 .hyde_deps
 *.py[cod]
 __pycache__/
 *.sublime-workspace
+*.swp
