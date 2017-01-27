@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import functools
 import json
 import re
 import traceback
 import urllib
-
 from fin.contextlog import Log
 import fin.cache
 import hyde.plugin
-import jinja2
 
 
 class LocationFinder(object):
@@ -43,7 +40,6 @@ class LocationFinder(object):
 
     def find_location(self, location):
         if location in self.known_locations:
-            #log.output("Location %s already known" % (location, ))
             return self.known_locations[location]
         with Log("Querying Google API for location"):
             result = self.query_location(location)
@@ -74,6 +70,10 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
         if condition:
             raise AssertionError(message)
 
+    def test_filename_ends_with_html(self, resource):
+        """ Job files must end with .html """
+        self.assertTrue(resource.source_file.name.endswith(".html"))
+
     def test_title(self, resource):
         """ Jobs must have a title """
         self.assertTrue(len(resource.meta.title) > 3)
@@ -92,7 +92,6 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
     def test_name(self, resource):
         """ Jobs must include a contact name"""
         contact = resource.meta.contact.name
-        #self.assertTrue(' ' in contact.strip())
         self.assertTrue(len(contact.strip()) > 2)
 
     def test_location(self, resource):

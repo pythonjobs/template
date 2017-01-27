@@ -8,3 +8,4 @@ hyde/content/text_index.json
 __pycache__/
 *.sublime-workspace
 *.swp
+jobs/

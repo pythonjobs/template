@@ -5,6 +5,8 @@ import shutil
 import os
 import os.path
 import subprocess
+
+import click as click
 import yaml
 from fin.contextlog import Log
 
@@ -42,23 +44,24 @@ def main(jobs_dir):
         hyde_root = os.path.join(template_dir, 'hyde')
         jobs_source = os.path.join(jobs_root, 'jobs')
         jobs_dest = os.path.join(hyde_root, 'content', 'jobs')
-        deploy_dir = os.path.join(hyde_root, 'deploy')
-        jobs_meta_path = os.path.join(jobs_dest, 'meta.yaml')
 
     with Log("Copy in jobs") as l:
-        for file in os.listdir(jobs_source):
-            assert file.endswith(".html"), \
-                "%s: jobs files must end in .html" % file
-            with Log('Copying %s' % file):
-                src_path = '%s/%s' % (jobs_source, file) # This is safer than join()
-                dest_path = '%s/%s' % (jobs_dest, file)
+        for job_file in os.listdir(jobs_source):
+            assert job_file.endswith(".html"), \
+                "%s: jobs files must end in .html" % job_file
+            with Log('Copying %s' % job_file):
+                src_path = '%s/%s' % (jobs_source, job_file) # This is safer than join()
+                dest_path = '%s/%s' % (jobs_dest, job_file)
                 validate(src_path)
                 shutil.copyfile(src_path, dest_path)
 
     with Log("Building Site"):
         subprocess.check_call(['hyde', '-x', '-s', hyde_root, 'gen', '-r'])
 
+@click.command()
+@click.argument("jobs_dir")
+def command(jobs_dir):
+    sys.exit(main(jobs_dir))
 
 if __name__ == "__main__":
-    # using sys.argv like this is ugly
-    sys.exit(main(*sys.argv[1:]))
+    command()
