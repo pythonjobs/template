@@ -24,7 +24,7 @@
         <entry>
             <title type="html">{{ res.meta.title|forceescape }}</title>
             <link href="{{ full_url(res.url) }}"/>
-            <author>{{ res.meta.contact.name }}</author>
+            <author>{{ res.meta.contact.name|forceescape }}</author>
             <updated>{{ res.meta.created|xmldatetime }}</updated>
             <published>{{ res.meta.created|xmldatetime }}</published>
             <id>{{ full_url(res.url) }}</id>
