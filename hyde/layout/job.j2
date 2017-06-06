@@ -1,4 +1,14 @@
 {% extends "base.j2" %}
+{% from "macros.j2" import render_excerpt with context  %}
+
+{%  block endhead %}
+    <meta property="og:site_name" content="The Free Python Job Board"/>
+    <meta property="og:title" content="{{ resource.meta.company }}: {{ resource.meta.title }}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="http://pythonjobs.github.io/touch-icon-ipad-retina.png" />
+    <meta property="og:description" content="{{ resource.detail|markdown|typogrify|striptags|truncate(220) }}" />
+    <meta property="og:url" content="{{ full_url(resource.url) }}" />
+{%- endblock %}
 
 {% block main -%}
 <nav class="main">
