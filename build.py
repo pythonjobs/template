@@ -54,7 +54,7 @@ def main(jobs_dir):
                 shutil.copyfile(src_path, dest_path)
 
     with Log("Building & Validating Site"):
-        subprocess.check_call(['hyde', '-x', '-s', hyde_root, 'gen', '-r'])
+        subprocess.check_call(['hyde', '-s', hyde_root, 'gen', '-r'])
 
 @click.command()
 @click.argument("jobs_dir")
