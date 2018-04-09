@@ -47,15 +47,13 @@ def main(jobs_dir):
 
     with Log("Copy in jobs") as l:
         for job_file in os.listdir(jobs_source):
-            assert job_file.endswith(".html"), \
-                "%s: jobs files must end in .html" % job_file
             with Log('Copying %s' % job_file):
                 src_path = '%s/%s' % (jobs_source, job_file) # This is safer than join()
                 dest_path = '%s/%s' % (jobs_dest, job_file)
                 validate(src_path)
                 shutil.copyfile(src_path, dest_path)
 
-    with Log("Building Site"):
+    with Log("Building & Validating Site"):
         subprocess.check_call(['hyde', '-x', '-s', hyde_root, 'gen', '-r'])
 
 @click.command()
