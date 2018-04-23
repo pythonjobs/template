@@ -10,6 +10,27 @@ import click as click
 import yaml
 from fin.contextlog import Log
 
+ROOT = os.path.dirname(__file__)
+
+
+
+COMMENT_TEMPLATE = """Unfortunately, there is an issue that is preventing us
+from validating or publishing your ad:
+
+%s
+
+If you'd like some help correcting this, or think the error is not valid, please reply to this comment.
+"""
+
+
+def report_error(msg):
+    proc = subprocess.Popen([
+        sys.executable,
+        os.path.join(ROOT, "comment.py")
+    ], stdin=subprocess.PIPE)
+    proc.communicate(COMMENT_TEMPLATE % msg)
+    raise AssertionError(msg)
+
 
 def validate(fullpath):
     """Validate the formatting of the given jobs file.
@@ -24,17 +45,18 @@ def validate(fullpath):
     try:
         data = data.decode('utf8')
     except UnicodeDecodeError:
-        raise AssertionError("%s: is not valid UTF-8" % path)
+        report_error("file %s contains some invalid characters.  All text must be valid utf-8" % path)
+
     chunks = re.split(r'^---[ \t]*$', data, flags=re.M)
-    assert len(chunks) >= 3, \
-        "%s: should be YAML and Markdown, prefixed by --- lines" % path
-    assert not chunks[0].strip(), \
-        "%s: data before initial ---" % path
+    if len(chunks) < 3:
+        report_error("%s: should be YAML and Markdown, prefixed by --- lines. Please check the example" % path)
+    if len(chunks[0].strip()) != 0:
+        report_error("%s: data before initial ---" % path)
 
     try:
         yaml.safe_load(chunks[1])
     except Exception as e:
-        raise AssertionError("%s: malformed YAML: %s" % (path, e))
+        report_error("%s: This file doesn't seem to have a valid yaml header:\n ```%s\n```" % (path, e))
 
 
 def main(jobs_dir):
@@ -54,7 +76,7 @@ def main(jobs_dir):
                 shutil.copyfile(src_path, dest_path)
 
     with Log("Building & Validating Site"):
-        subprocess.check_call(['hyde', '-s', hyde_root, 'gen', '-r'])
+        subprocess.check_call(['hyde', '-x', '-s', hyde_root, 'gen', '-r'])
 
 @click.command()
 @click.argument("jobs_dir")

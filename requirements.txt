@@ -4,3 +4,4 @@ beautifulsoup4
 stemming
 click
 requests
+selenium

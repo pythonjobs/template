@@ -81,30 +81,27 @@ class IndexerPlugin(hyde.plugin.Plugin):
 
     def text_resource_complete(self, resource, text):
         with CLog("Indexing %s" % resource):
-            try:
-                if not resource.source_file.kind == 'html':
-                    return
-                if not resource.source_file.is_descendant_of(self.jobs_dir):
-                    return
+            if not resource.source_file.kind == 'html':
+                return
+            if not resource.source_file.is_descendant_of(self.jobs_dir):
+                return
 
-                doc = bs4.BeautifulSoup(text, "html.parser")
-                body = doc.find(attrs={"class": 'body'})
-                headings = body.select("h1,h2")
-                for heading in headings:
-                    heading.extract()
-                tags = " ".join(resource.meta.get('tags', ''))
-                company = resource.meta.get('company', '')
-                title = resource.meta.get('title', '')
-                parts = [
-                    ("Title: ",title, 10),
-                    ("Company: ",company, 5),
-                    ("Tags: ", tags, 5),
-                    ("", body.text, 1),
-                ]
-                self.write_text_resource(resource.slug, parts)
-                self.add_to_index(resource, parts)
-            except:
-                import pdb; pdb.set_trace()
+            doc = bs4.BeautifulSoup(text, "html.parser")
+            body = doc.find(attrs={"class": 'body'})
+            headings = body.select("h1,h2")
+            for heading in headings:
+                heading.extract()
+            tags = " ".join(resource.meta.get('tags', ''))
+            company = resource.meta.get('company', '')
+            title = resource.meta.get('title', '')
+            parts = [
+                ("Title: ",title, 10),
+                ("Company: ",company, 5),
+                ("Tags: ", tags, 5),
+                ("", body.text, 1),
+            ]
+            self.write_text_resource(resource.slug, parts)
+            self.add_to_index(resource, parts)
 
 
     def write_text_resource(self, name, parts):

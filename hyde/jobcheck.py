@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-import os
 import collections
-import requests
+import datetime
 import json
+import os
 import re
+import requests
+import subprocess
+import sys
 import traceback
 import urllib
+
 from fin.contextlog import Log
 import fin.cache
 import hyde.plugin
 from hyde.exceptions import HydeException
 
+ROOT = os.path.dirname(os.path.dirname(__file__))
+ONE_YEAR_AGO = datetime.date.today() - datetime.timedelta(days=365)
 
 # Bit ugly, but patch HydeException to not mangle all exception on reraise
 # which was causing confusing error messages:
@@ -25,23 +30,13 @@ def new_reraise(message, exc_info):
 HydeException.reraise = staticmethod(new_reraise)
 
 
-COMMENT_TEMPLATE = """Hi
-
-Thanks for submitting this job advert.
-
-We've run a few automated tests and discovered %s:
+COMMENT_TEMPLATE = """We've run a few automated tests and discovered %s:
 
 %s
 
-If you'd like some help correcting this, or think the error is incorrect, please reply to this comment.
-
-Thanks
-
-Pythonjobs
+If you'd like some help correcting this, or think the error is not valid, please reply to this comment.
 """
 
-
-ONE_YEAR_AGO = datetime.date.today() - datetime.timedelta(days=365)
 
 class LocationFinder(object):
     PUBLISHED_LOCATIONS = 'http://pythonjobs.github.io/media/geo.json'
@@ -165,14 +160,14 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
                 "%s could not be interpreted as a valid date",
                 date
             )
-
+        if resource.meta.created < ONE_YEAR_AGO:
+            resource.meta.listable = False
+            resource.is_processable = False  # Remove old job listings
         # unfortunately isinstance fails us here
         if type(date) is not datetime.date:
             return self.add_error(
                 resource, 'The `created` field created must be a date, not date time'
             )
-        if resource.meta.created < ONE_YEAR_AGO:
-            resource.is_processable = False  # Remove old job listings
         if date > datetime.date.today():
             return self.add_error(
                 resource,
@@ -243,16 +238,12 @@ class CheckMetaPlugin(hyde.plugin.Plugin):
                             tester(resource)
 
         if self.errors:
-            if "GH_TOKEN" in os.environ and "TRAVIS_PULL_REQUEST" in os.environ:
-                token = os.environ['GH_TOKEN']
-                pr_num = os.environ["TRAVIS_PULL_REQUEST"]
-                url = "https://api.github.com/repos/pythonjobs/jobs/issues/%s/comments" % pr_num
-                req = requests.post(
-                    url, json={"body": self.get_pr_comment()},
-                    headers={"Authorization": "token %s" % token}
-                )
-                print(req.text)
-                req.raise_for_status()
+            proc = subprocess.Popen([
+                sys.executable,
+                os.path.join(ROOT, "comment.py")
+            ], stdin=subprocess.PIPE)
+            proc.communicate(self.get_pr_comment())
+
             with Log("Site Processing Errors"):
                 for filename, errors in self.errors.items():
                     with Log(filename, ok_msg="x") as log:
