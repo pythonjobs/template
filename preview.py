@@ -52,6 +52,9 @@ def get_file_previews(pull_request_num):
         driver.close()
         server_proc.terminate()
         server_proc.wait()
+
+    if not preview_ids:
+        return
     subprocess.check_call(['git', 'push', 'origin', 'master'], cwd=SCREENSHOT_REPO)
 
     link_template = '![Job listing preview](https://raw.githubusercontent.com/pythonjobs/screenshots/%s/screenshot.png)'
