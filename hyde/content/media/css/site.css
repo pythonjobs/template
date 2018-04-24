@@ -12,6 +12,7 @@
     margin: 0;
 }
 
+
 article,aside,details,figcaption,figure,
 footer,header,hgroup,menu,nav,section {
     display:block;
@@ -63,7 +64,11 @@ header{
   top: 0;
   right: 0;
   left: 0;
-  background-color: #48a0dc;
+  background-color: #3a6183;
+  background: url("../header-bg.jpg") no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
   padding: 10px;
   text-align: right;
 }
@@ -81,17 +86,20 @@ header a:hover{
 #logo{
   position: absolute;
   font-size: 60px;
-  text-shadow: 3px 3px 5px #2C7BB2;
   top: 6px;
 }
 
+div.sub{
+  font-weight: 400;
+}
+
 #title{
-  font-weight: lighter;
+  font-weight: 300;
   font-size: 270%;
-  color: #22567B;
+  color: white;
 }
 #title span{
-  color: white;
+  font-weight: normal;
 }
 
 /* Layout */
@@ -99,6 +107,8 @@ header a:hover{
 #container {
     margin: 0 10px;
     padding-bottom: 80px;
+    background: url("../main-bg.jpg") no-repeat 50% 70% fixed;
+    background-size: 100%;
 }
 
 header {
@@ -164,9 +174,10 @@ section.job_list i{
 
 section.job_list .job{
   margin: 10px 0;
-  background: #fafaf8;
+  background: white;
   padding: 10px 15px;
   border: solid #ddd 1px;
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
 }
 
 .hidden{
@@ -180,7 +191,7 @@ section.job_list .info{
 }
 
 section.job_list .job h1{
-  font-size: 140%;
+  font-size: 130%;
   font-weight: normal;
   margin-bottom: 0.1em;
 }
@@ -188,17 +199,18 @@ section.job_list .job h1{
 section.job_list .go_button{
   display: block;
   float: right;
-  background: #2D76A8;
+  background: #3a6183;
   color: white;
-  margin: -4px -6px 3px 3px;
-  padding: 5px 8px;
-  box-shadow: 1px 1px 3px #aaa;
+  margin: -10px -16px 3px 3px;
+  padding: 6px 10px;
+  /*box-shadow: 1px 1px 3px #aaa;*/
   transition: background-color 0.3s;
 }
 
 section.job_list .go_button i{
   color: inherit;
   margin-left: 3px;
+  margin-right: 0;
 }
 
 section.job_list .go_button:hover{
@@ -229,7 +241,8 @@ nav.main a{
 }
 
 article.job{
-  padding-bottom: 20px;
+  padding: 0 5px 5px 20px;
+  background: rgba(255, 255, 255, 0.8);
 }
 
 article.job h1{
