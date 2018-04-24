@@ -24,12 +24,14 @@ If you'd like some help correcting this, or think the error is not valid, please
 
 
 def report_error(msg):
-    proc = subprocess.Popen([
-        sys.executable,
-        os.path.join(ROOT, "comment.py")
-    ], stdin=subprocess.PIPE)
-    proc.communicate(COMMENT_TEMPLATE % msg)
-    raise AssertionError(msg)
+    with Log("Error Found"):
+        with Log("Commenting on PR"):
+            proc = subprocess.Popen([
+                sys.executable,
+                os.path.join(ROOT, "comment.py")
+            ], stdin=subprocess.PIPE)
+            proc.communicate(COMMENT_TEMPLATE % msg)
+        raise AssertionError(msg)
 
 
 def validate(fullpath):
