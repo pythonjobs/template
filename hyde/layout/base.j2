@@ -36,24 +36,22 @@
   <link rel="stylesheet" href="{{ media_url('css/font.css') }}">
   <link rel="stylesheet" href="{{ media_url('css/site.css') }}">
   {% endblock css %}
-
   {% block headjs %}
-  
   {% endblock headjs %}
   {% block endhead %}{% endblock endhead %}
 </head>
 <body id="{{ resource.meta.id if resource.meta.id else resource.slug }}">
   {% block content %}
+  <header>
+    <div class="in">
+      <div id="logo"><a href="/"><i class="i-pyjobslogo"></i></a></div>
+      <div id="title"><a href="/">The Free <span>Python Job Board</span></a></div>
+      <div class="sub">for the global Python community</div>
+    </div>
+  </header>
   <div id="container">
       {% block container %}
       <div id="main" role="main">
-          <header>
-            <div class="in">
-              <div id="logo"><a href="/"><i class="i-pyjobslogo"></i></a></div>
-              <div id="title"><a href="/">The Free <span>Python Job Board</span></a></div>
-              <div class="sub">for the global Python community</div>
-            </div>
-          </header>
           {% block below_header %}
             <section id="content">
             {% block main %}
