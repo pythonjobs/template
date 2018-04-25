@@ -1,0 +1,258 @@
+{% extends "base.j2" %}
+{% block scripts %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.min.js"></script>
+
+    <!-- CodeMirror -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.37.0/codemirror.min.js"></script>
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.37.0/codemirror.min.css">
+
+	<!-- CodeMirror: Addons -->
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.37.0/addon/lint/lint.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.37.0/addon/lint/lint.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/js-yaml/3.11.0/js-yaml.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.37.0/addon/mode/overlay.min.js"></script>
+
+	<!-- CodeMirror: Modes -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.37.0/mode/markdown/markdown.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.37.0/mode/gfm/gfm.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.37.0/mode/yaml/yaml.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.37.0/mode/yaml-frontmatter/yaml-frontmatter.min.js"></script>
+
+	<!-- Template for preview -->
+	<script src="//mozilla.github.io/nunjucks/files/nunjucks-slim.js"></script>
+	<script src="//unpkg.com/dayjs@1.5.12/dist/dayjs.min.js"></script>
+	<script src="{{ media_url('js/job-preview.js') }}"></script>
+
+	<script>
+	'use strict';
+
+	if (!String.prototype.padStart) {
+	    String.prototype.padStart = function padStart(targetLength,padString) {
+	        targetLength = targetLength>>0; //truncate if number or convert non-number to 0;
+	        padString = String((typeof padString !== 'undefined' ? padString : ' '));
+	        if (this.length > targetLength) {
+	            return String(this);
+	        }
+	        else {
+	            targetLength = targetLength-this.length;
+	            if (targetLength > padString.length) {
+	                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+	            }
+	            return padString.slice(0,targetLength) + String(this);
+	        }
+	    };
+	}
+	if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+		  const o = Object(this);
+		  const len = o.length >>> 0;
+		  let k = 0;
+		  while (k < len) {
+		    var kValue = o[k];
+		    if (predicate(kValue)) {
+		      return kValue;
+		    }
+		    k++;
+		  }
+		  return undefined;
+		},
+		configurable: false,
+		writable: false
+		});
+	}
+
+	function get_ad_parts(text){
+		let parts = (('\n' + text).split("\n---\n"));
+		return {meta: parts[1], body: parts[2]};
+	};
+
+	function meta_checks(full_text, errors, meta){
+		const text_lines = full_text.split('\n');
+		const loc = CodeMirror.Pos(0,0);
+		function check(pass, line_finder, msg){
+			if (!pass){
+				let error_loc = loc;
+				for (let line=0; line < text_lines.length; ++line) {
+					if (text_lines[line].match(line_finder)) {
+						error_loc = CodeMirror.Pos(line+1, 0);
+					}
+				}
+				errors.push({from: error_loc, to: error_loc, message: msg});
+			}
+		}
+		check((meta.title || '').length > 2, /^\s*title:/, "title must be provided");
+		check((meta.company || '').length > 1, /^\s*company:/, "company must be provided");
+		check((meta.location || '').length > 2, /^\s*location:/, "location must be provided");
+		check(meta.contact, "contact", "Must provide contact info");
+		meta.contact = meta.contact || {};
+		check((meta.contact.name || '').length > 2, /^\s*name:/, "contact.name must be provided");
+		check(
+			(meta.contact.email || '').match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$/i),
+			/^\s*email:/,
+			"valid contact.email must be provided")
+		check(
+			(meta.contract || '').match(/(contract|perm|temp|part\-time|other)/i),
+			/^\s*contract:/,
+			"contract must be one of contract, perm, temp, part-time or other"
+			);
+		check(meta.created || meta.created.getFullYear, /^\s*created:/, "created must be provided and be a valid date");
+		check(meta.created < new Date(), /^\s*created:/, "created date must not be in the future");
+		check(!(meta.tags || []).find(function(x){ return (x||'').match(/index/i);}), /^\s*tags:/, "Tags cannot contain index");
+	}
+
+	function frontmatter_lint(text) {
+		const beginning = CodeMirror.Pos(0,0);
+	 	var found = [];
+	 	if (!text.match(/^---\n/)) {
+	 		found.push({from: beginning, to: beginning, message: "Must start with '---' on first line"});
+	 	}
+	 	const parts = get_ad_parts(text);
+	 	let meta;
+	 	try {
+	 		meta = jsyaml.load(parts.meta);
+	 	} catch(e) {
+	     	var loc = e.mark,
+	     		// Offset by 1 because of leading '---' line
+	        	from = loc ? CodeMirror.Pos(loc.line+1, loc.column) : CodeMirror.Pos(1, 0),
+	         	to = from;
+	      	found.push({ from: from, to: to, message: e.message });
+	  	}
+	  	if(!parts.body) {
+	 		found.push({from: beginning, to: beginning, message: "Format should be:\n---\nyaml header\n---\nmarkdown body"});
+	  	}
+	  	if(meta && meta != 'undefined') {
+	  		meta_checks(parts.meta, found, meta);
+	  	}
+	 	return found;
+	}
+
+	function reset_saved() {
+		window.localStorage.currentJobEditorText = ''
+		window.location.reload(true);
+	}
+
+	$("#pr-link").click(function(e) {
+		const full_text = window.meta_codemirror.getValue();
+		if (frontmatter_lint(full_text).length) {
+			if (!confirm("There are errors in this document, really continue?")){
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			}
+		}
+	});
+
+	function iso_date() {
+		const today = new Date();
+		const month_str = ('' + (today.getMonth()+1)).padStart(2, '0');
+		const day_str = ('' + today.getDate()).padStart(2, '0');
+		return '' + today.getFullYear() + '-' + month_str + '-' + day_str;
+	}
+
+	function slugify(text)
+	{
+	  return text.toString().toLowerCase()
+	    .replace(/\s+/g, '-')           // Replace spaces with -
+	    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+	    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+	    .replace(/^-+/, '')             // Trim - from start of text
+	    .replace(/-+$/, '');            // Trim - from end of text
+	}
+
+	let cur_update_id = null;
+	function queue_preview_update() {
+		window.localStorage.currentJobEditorText = window.meta_codemirror.getValue();
+		if(cur_update_id) {
+			window.clearTimeout(cur_update_id);
+			cur_update_id = null;
+		}
+		cur_update_id = window.setTimeout(update_preview, 200);
+	}
+
+	function update_pr_link(full_text, meta) {
+		const base = "https://github.com/pythonjobs/jobs/new/master/jobs?";
+		const filename = slugify('' + meta.company + ' ' + meta.title) + ".html";
+		const query_params = $.param({filename: filename, value: full_text});
+		$("#pr-link").attr('href', base + query_params);
+	};
+
+	function update_preview() {
+		$("#preview").html("loading");
+		const full_text = window.meta_codemirror.getValue();
+		try{
+			let parts = get_ad_parts(full_text);
+			parts.meta = jsyaml.load(parts.meta);
+			let c = dayjs(parts.meta.created);
+			parts.meta.created = {strftime: function(){return c.format("dddd, D MMMM YYYY");}};
+			let md_converter = new showdown.Converter({noHeaderId: true});
+			const detail = md_converter.makeHtml(parts.body);
+			var html = nunjucks.render("job.j2", {
+				content_url: function() { return '';},
+				resource: parts,
+				detail: detail
+			});
+			$("#preview").html(html);
+			update_pr_link(full_text, parts.meta);
+		}catch(e){
+			console.log(e);
+			$("#preview").html("<b>Error generating preview</b>");
+			return;
+		}
+	}
+
+	$(function(){
+		const ad_editor = document.getElementById("ad-editor");
+		ad_editor.value = ad_editor.value.replace(
+			/!!timestamp 'XXX'/,
+			"!!timestamp " + iso_date()
+		);
+		window.meta_codemirror = CodeMirror.fromTextArea(ad_editor, {
+			mode: 'yaml-frontmatter',
+			lineWrapping: true,
+			lineNumbers: true,
+			lint: {getAnnotations: frontmatter_lint},
+			gutters: ["CodeMirror-lint-markers"],
+			viewportMargin: Infinity
+		});
+		window.meta_codemirror.on('changes', queue_preview_update);
+		if (localStorage.currentJobEditorText) {
+			window.meta_codemirror.setValue(localStorage.currentJobEditorText);
+		}
+		update_preview()
+	});
+	</script>
+{% endblock %}
+
+{%block css %}
+{{ super() }}
+<link href="//fonts.googleapis.com/css?family=Source+Code+Pro:400,700" rel="stylesheet">
+<link rel="stylesheet" href="{{ media_url('css/editor.css') }}">
+{%endblock %}
+
+{% block container %}
+<div id=editor-column>
+	<h2>Editor</h2>
+	<div class=infopanel>
+		<p>Fill in the template below.  The preview should auto-update to reflect changes.</p>
+		<p><em><b>Please note:</b> The preview may not be 100% identical to the final output,
+			we use a different rendering engine for the live site.</em></p>
+		<p>Once you're happy with the result, press 'Create pull request' below.<br/>
+		<em>It helps if you're logged into github already before clicking that button (bug with github).</em><br/>
+		If the button doesn't work, please copy-paste the <b>editor</b> text as a new file in a Github pull request here:
+		<a target=_blank href="https://github.com/pythonjobs/jobs/new/master/jobs?filename=.html&value=paste%20here...">https://github.com/pythonjobs/jobs/new/master/jobs</a>
+		</p>
+	</div>
+	<div id=editor-buttons>
+		<button onclick=reset_saved()>Reset to template</button>
+		<a id=pr-link target=_blank>Create Pull Request</a>
+	</div>
+	<div id=editors>
+		<textarea id=ad-editor>{% include "example.md" %}</textarea>
+	</div>
+</div>
+<div id=preview-column>
+<h2>Preview</h2>
+<div id=preview></div>
+</div>
+{% endblock %}
