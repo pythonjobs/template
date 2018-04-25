@@ -3,26 +3,18 @@ import os
 import time
 import sys
 import subprocess
+import requests
 
 from selenium import webdriver
 
 TEMPLATE_DIR = os.path.abspath(os.path.dirname(__file__))
-SCREENSHOT_REPO = os.path.join(os.path.dirname(TEMPLATE_DIR), "screenshots")
-SCREENSHOT_FILE =  os.path.join(SCREENSHOT_REPO, "screenshot.png")
-
-def check_out():
-    if 'GH_TOKEN' not in os.environ:
-        sys.exit("No GH_TOKEN found")
-    gh_token = os.environ['GH_TOKEN']
-    os.mkdir(SCREENSHOT_REPO)
-    repo_url = 'https://%s@github.com/pythonjobs/screenshots.git' % gh_token
-    subprocess.check_call(['git', 'clone', '--depth=1', repo_url, SCREENSHOT_REPO], cwd=SCREENSHOT_REPO)
 
 
-def commit_changes(pr_num):
-    subprocess.check_call(['git', 'add', SCREENSHOT_FILE], cwd=SCREENSHOT_REPO)
-    subprocess.check_call(['git', 'commit', '--allow-empty', '-m', 'Screenshot for #%s' % pr_num], cwd=SCREENSHOT_REPO)
-    return subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=SCREENSHOT_REPO).strip()
+def upload_screenshot(data):
+    url = "https://i2xwshcjfa.execute-api.eu-west-1.amazonaws.com/live/pythonjobs-commentbot/screenshots"
+    req = requests.post(url, data, headers={"Content-Type": "image/png"})
+    req.raise_for_status()
+    return req.json()['body']
 
 
 def get_preview(driver, filename, pull_request_num):
@@ -32,9 +24,7 @@ def get_preview(driver, filename, pull_request_num):
     while driver.execute_script("return document.readyState") != "complete":
         time.sleep(0.5)
     png = driver.get_screenshot_as_png()
-    with open(SCREENSHOT_FILE, "wb") as fh:
-        fh.write(png)
-    return commit_changes(pull_request_num)
+    return upload_screenshot(png)
 
 
 def get_file_previews(pull_request_num):
@@ -55,9 +45,8 @@ def get_file_previews(pull_request_num):
 
     if not preview_ids:
         return
-    subprocess.check_call(['git', 'push', 'origin', 'master'], cwd=SCREENSHOT_REPO)
 
-    link_template = '![Job listing preview](https://raw.githubusercontent.com/pythonjobs/screenshots/%s/screenshot.png)'
+    link_template = '![Job listing preview](https://s3-eu-west-1.amazonaws.com/pythonjobs-screenshots/%s.png)'
     image_links = [link_template % preview_id for preview_id in preview_ids]
 
     message = """Here are some screenshots of what the live listing should look like:
@@ -80,7 +69,6 @@ def get_modified_files():
 
 
 if __name__ == '__main__':
-    check_out()
     pull_request_num = os.environ.get('TRAVIS_PULL_REQUEST', 'false')
     if pull_request_num  == 'false':
         sys.exit("Not creating pull-request screenshot, as can't get PR number")
