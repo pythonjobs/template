@@ -1,0 +1,83 @@
+
+#container{
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-evenly;
+	align-items: stretch;
+}
+
+#editors{
+	font-family: "Source Code Pro";
+	font-size: 0.8em;
+}
+pre.sep{
+	margin-left: 4.0em;
+}
+
+h2{
+	font-weight: bold;
+}
+
+.infopanel{
+	background: white;
+    margin: 10px;
+    padding: 5px;
+    border: 1px solid #a44;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+}
+
+#editor-buttons button,
+#editor-buttons a{
+	display: inline-block;
+	padding: 3px 10px;
+	background: #005;
+	color: white;
+	border-radius: 2px;
+	box-shadow: 1px 1px 0 #55a;
+	margin-right: 1px;
+	margin-bottom: 1px;
+	vertical-align: top;
+	cursor: pointer;
+}
+#editor-buttons button:active,
+#editor-buttons a:active{
+	box-shadow: none;
+	margin-top: 1px;
+	margin-left: 1px;
+	margin-right: 0;
+	margin-bottom: 0;
+}
+
+#editor-buttons{
+	margin-bottom: 5px;
+}
+
+#editors .CodeMirror{
+	font-family: "Source Code Pro";
+	background: transparent;
+	height: auto;
+}
+#editor-column{
+	width: 50%;
+	flex-grow: 1;
+}
+#preview-column{
+	width: 50%;
+	flex-grow: 1;
+}
+
+#preview{
+	background: white;
+    margin: 10px;
+    border: 1px solid #44a;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+}
+
+#preview nav{
+	display: none;
+}
+
+#clear{
+	clear: both:
+	margin: 1px;
+}
