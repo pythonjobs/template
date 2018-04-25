@@ -19,19 +19,14 @@ Pythonjobs
 
 def add_comment(comment):
     with Log("PR comment"):
-        if "GH_TOKEN" not in os.environ:
-            Log.output("No GH_TOKEN found")
+        if "TRAVIS_PULL_REQUEST" not in os.environ or os.environ["TRAVIS_PULL_REQUEST"] == 'false':
+            Log.output("No TRAVIS_PULL_REQUEST found, not commenting")
             return
-        if "TRAVIS_PULL_REQUEST" not in os.environ:
-            Log.output("No TRAVIS_PULL_REQUEST found")
-            return
-        token = os.environ['GH_TOKEN']
         pr_num = os.environ["TRAVIS_PULL_REQUEST"]
-        url = "https://api.github.com/repos/pythonjobs/jobs/issues/%s/comments" % pr_num
+        url = "https://i2xwshcjfa.execute-api.eu-west-1.amazonaws.com/live/pythonjobs-commentbot/prcomment"
         with Log("Submitting request"):
             req = requests.post(
-                url, json={"body": COMMENT_TEMPLATE % comment},
-                headers={"Authorization": "token %s" % token}
+                url, json={"pr": int(pr_num), "msg": comment},
             )
             print(req.text)
             req.raise_for_status()
