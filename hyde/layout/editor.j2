@@ -42,6 +42,25 @@
 	        }
 	    };
 	}
+	if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+		  const o = Object(this);
+		  const len = o.length >>> 0;
+		  let k = 0;
+		  while (k < len) {
+		    var kValue = o[k];
+		    if (predicate(kValue)) {
+		      return kValue;
+		    }
+		    k++;
+		  }
+		  return undefined;
+		},
+		configurable: false,
+		writable: false
+		});
+	}
 
 	function get_ad_parts(text){
 		let parts = (('\n' + text).split("\n---\n"));
@@ -79,7 +98,7 @@
 			);
 		check(meta.created || meta.created.getFullYear, /^\s*created:/, "created must be provided and be a valid date");
 		check(meta.created < new Date(), /^\s*created:/, "created date must not be in the future");
-		check(!(meta.tags || []).find((x)=>(x||'').match(/index/i)), /^\s*tags:/, "Tags cannot contain index");
+		check(!(meta.tags || []).find(function(x){ return (x||'').match(/index/i);}), /^\s*tags:/, "Tags cannot contain index");
 	}
 
 	function frontmatter_lint(text) {
@@ -169,7 +188,7 @@
 			let md_converter = new showdown.Converter({noHeaderId: true});
 			const detail = md_converter.makeHtml(parts.body);
 			var html = nunjucks.render("job.j2", {
-				content_url: ()=>'',
+				content_url: function() { return '';},
 				resource: parts,
 				detail: detail
 			});
