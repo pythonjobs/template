@@ -26,7 +26,7 @@ def add_comment(comment):
         url = "https://i2xwshcjfa.execute-api.eu-west-1.amazonaws.com/live/pythonjobs-commentbot/prcomment"
         with Log("Submitting request"):
             req = requests.post(
-                url, json={"pr": int(pr_num), "msg": comment},
+                url, json={"pr": int(pr_num), "msg": COMMENT_TEMPLATE % comment},
             )
             print(req.text)
             req.raise_for_status()
