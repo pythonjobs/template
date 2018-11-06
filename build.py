@@ -69,6 +69,27 @@ def main(jobs_dir):
         jobs_source = os.path.join(jobs_root, 'jobs')
         jobs_dest = os.path.join(hyde_root, 'content', 'jobs')
 
+    with Log("Checking for unexpected files"):
+        unexpected_files = set()
+        with Log(jobs_root) as l:
+            for filename in os.listdir(jobs_root):
+                if filename.endswith('.html') or filename.endswith('.md'):
+                    if filename not in {"README.md", "jobtemplate.html"}:
+                        unexpected_files.add((filename, jobs_root))
+
+        with Log(jobs_source) as l:
+            for filename in os.listdir(jobs_source):
+                if not filename.endswith(".html"):
+                    unexpected_files.add((filename, jobs_source))
+        if unexpected_files:
+            file_descs = ["%s (%s)" % i for i in unexpected_files]
+            report_error("""
+All job files must be added under the jobs/ directory, and must end in '.html'.
+I found the following files that do not match this:
+
+ * %s
+            """ % ("\n * ".join(file_descs)))
+
     with Log("Copy in jobs") as l:
         for job_file in os.listdir(jobs_source):
             with Log('Copying %s' % job_file):
