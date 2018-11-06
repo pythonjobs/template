@@ -172,7 +172,7 @@
 
 	function update_pr_link(full_text, meta) {
 		const base = "https://github.com/pythonjobs/jobs/new/master/jobs?";
-		const filename = slugify('' + meta.company + ' ' + meta.title) + ".html";
+		const filename = 'jobs/' + slugify('' + meta.company + ' ' + meta.title) + ".html";
 		const query_params = $.param({filename: filename, value: full_text});
 		$("#pr-link").attr('href', base + query_params);
 	};
